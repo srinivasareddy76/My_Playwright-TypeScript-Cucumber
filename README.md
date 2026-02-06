@@ -70,19 +70,162 @@ npx playwright install
 
 ### 3. Environment Setup
 
+#### Understanding Environment Configuration
+
+The framework uses a two-tier configuration system:
+
+1. **`.env.example`** - Template file showing all available configuration options
+2. **`.env`** - Your actual configuration file (not tracked in git for security)
+
+#### Setting Up Your Environment
+
 Copy the environment template and configure:
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` file with your configuration:
+**What does `cp .env.example .env` mean?**
+- `cp` = copy command
+- `.env.example` = source file (template with example values)
+- `.env` = destination file (your actual configuration)
+
+This creates a copy of the template file that you can customize with your actual values.
+
+#### Edit Your `.env` File
+
+Open the `.env` file and configure your settings:
 
 ```env
+# Basic Configuration
+ENV=t3                    # Environment: t3 or t5
+BROWSER=chromium          # Browser: chromium, firefox, webkit
+HEADED=false              # Show browser UI: true or false
+VIEWPORT=desktop          # Screen size: desktop, tablet, mobile
+
+# Performance Settings
+TIMEOUT=30000             # Default timeout in milliseconds
+PARALLEL=3                # Number of parallel test workers
+RETRY=2                   # Retry attempts for failed tests
+
+# Database Settings (Optional - overrides defaults)
+DB_HOST=your-db-host.com
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+
+# Application Credentials (If needed)
+APP_PASSWORD=your_app_password
+ISVA_PASSWORD=your_isva_password
+```
+
+#### Environment Configuration Files
+
+The framework includes these configuration files:
+
+| File | Purpose | Tracked in Git |
+|------|---------|----------------|
+| `.env.example` | Template with example values | ✅ Yes |
+| `.env` | Your actual configuration | ❌ No (security) |
+| `src/config/environment.ts` | Environment definitions | ✅ Yes |
+
+#### Available Environments
+
+The framework supports multiple environments defined in `src/config/environment.ts`:
+
+**T3 Environment (Test)**
+```typescript
+t3: {
+  baseUrl: 'https://frbsf.org',
+  database: {
+    host: 't3-db-host.example.com',
+    port: 1521,
+    serviceId: 'T3DB'
+  }
+}
+```
+
+**T5 Environment (Test)**
+```typescript
+t5: {
+  baseUrl: 'https://frbsf.org',
+  database: {
+    host: 't5-db-host.example.com',
+    port: 1521,
+    serviceId: 'T5DB'
+  }
+}
+```
+
+#### Environment Configuration Examples
+
+**Example 1: Basic Setup**
+```bash
+# Copy template
+cp .env.example .env
+
+# Edit .env file
 ENV=t3
 BROWSER=chromium
 HEADED=false
-VIEWPORT=desktop
+```
+
+**Example 2: Development Setup (with visible browser)**
+```bash
+# Edit .env file
+ENV=t3
+BROWSER=chromium
+HEADED=true
+SLOW_MO=1000
+DEBUG=true
+```
+
+**Example 3: CI/CD Setup (fast execution)**
+```bash
+# Edit .env file
+ENV=t5
+BROWSER=chromium
+HEADED=false
+PARALLEL=5
+TIMEOUT=60000
+CI=true
+```
+
+**Example 4: Cross-browser Testing**
+```bash
+# For Chromium
+ENV=t3
+BROWSER=chromium
+HEADED=false
+
+# For Firefox
+ENV=t3
+BROWSER=firefox
+HEADED=false
+
+# For WebKit
+ENV=t3
+BROWSER=webkit
+HEADED=false
+```
+
+#### Environment Variable Priority
+
+The framework uses this priority order for configuration:
+
+1. **Command line environment variables** (highest priority)
+2. **`.env` file values**
+3. **Default values in `environment.ts`** (lowest priority)
+
+**Examples:**
+```bash
+# Override .env settings via command line
+ENV=t5 HEADED=true npm test
+
+# Use .env file settings
+npm test
+
+# Mix command line and .env
+BROWSER=firefox npm run test:smoke:t3
 ```
 
 ### 4. Run Tests
