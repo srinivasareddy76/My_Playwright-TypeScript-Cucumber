@@ -1,0 +1,69 @@
+{
+  "name": "my-playwright-typescript-cucumber",
+  "version": "1.0.0",
+  "description": "Comprehensive Playwright TypeScript Cucumber test automation framework for FRBSF website smoke testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js",
+    "test:headed": "cross-env HEADED=true cucumber-js --profile headed",
+    "test:headless": "cucumber-js --profile headless",
+    "test:smoke:t3": "cross-env ENV=t3 cucumber-js --tags '@smoke'",
+    "test:smoke:t5": "cross-env ENV=t5 cucumber-js --tags '@smoke'",
+    "test:critical": "cucumber-js --tags '@critical'",
+    "test:homepage": "cucumber-js --tags '@homepage'",
+    "test:parallel": "cucumber-js --parallel 3",
+    "test:retry": "cucumber-js --retry 2",
+    "test:runner": "ts-node src/utils/test-runner.ts",
+    "test:chromium": "cross-env BROWSER=chromium cucumber-js",
+    "test:firefox": "cross-env BROWSER=firefox cucumber-js",
+    "test:webkit": "cross-env BROWSER=webkit cucumber-js",
+    "test:mobile": "cross-env VIEWPORT=mobile cucumber-js --tags '@responsive'",
+    "test:tablet": "cross-env VIEWPORT=tablet cucumber-js --tags '@responsive'",
+    "test:desktop": "cross-env VIEWPORT=desktop cucumber-js --tags '@responsive'",
+    "report:open": "open reports/cucumber-report.html",
+    "clean": "rimraf reports/* && rimraf test-results/*",
+    "lint": "eslint src tests --ext .ts",
+    "lint:fix": "eslint src tests --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "type-check": "tsc --noEmit",
+    "install:browsers": "npx playwright install",
+    "postinstall": "npm run install:browsers"
+  },
+  "keywords": [
+    "playwright",
+    "typescript",
+    "cucumber",
+    "bdd",
+    "test-automation",
+    "frbsf",
+    "smoke-testing",
+    "page-object-model"
+  ],
+  "author": "Test Automation Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@cucumber/cucumber": "^10.3.1",
+    "@playwright/test": "1.58.1",
+    "@types/node": "^20.11.17",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "cross-env": "^7.0.3",
+    "cucumber-html-reporter": "^7.1.1",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "multiple-cucumber-html-reporter": "^3.6.2",
+    "prettier": "^3.2.5",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.1",
+    "winston": "^3.11.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}

@@ -24,7 +24,10 @@ test-results/
 playwright-report/
 coverage/
 *.xml
-*.json
+reports/*.json
+test-results/*.json
+cucumber-report.json
+junit-report.json
 *.html
 
 # Screenshots and videos
