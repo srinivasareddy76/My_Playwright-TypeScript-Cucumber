@@ -103,14 +103,78 @@ npm run test:homepage
 ### Basic Test Execution
 
 ```bash
-# Run all tests
+# Run all tests (default: headless mode)
 npm test
 
 # Run in headed mode (visible browser)
 npm run test:headed
 
-# Run in headless mode
+# Run in headless mode (background, no browser UI)
 npm run test:headless
+```
+
+### Headless vs Headed Testing
+
+#### Headless Mode (Default)
+Headless mode runs tests in the background without displaying the browser UI, making it faster and suitable for CI/CD pipelines:
+
+```bash
+# Explicit headless mode
+npm run test:headless
+
+# Set headless via environment variable
+HEADED=false npm test
+
+# Headless with specific browser
+BROWSER=firefox HEADED=false npm test
+
+# Headless smoke tests
+npm run test:smoke:t3
+```
+
+**Benefits of Headless Mode:**
+- ⚡ **Faster execution** - No UI rendering overhead
+- 🔧 **CI/CD friendly** - Perfect for automated pipelines
+- 💻 **Resource efficient** - Lower CPU and memory usage
+- 🔄 **Parallel execution** - Better performance with multiple workers
+
+#### Headed Mode (Debugging)
+Headed mode displays the browser UI, useful for debugging and test development:
+
+```bash
+# Explicit headed mode
+npm run test:headed
+
+# Set headed via environment variable
+HEADED=true npm test
+
+# Headed with slow motion for debugging
+HEADED=true SLOW_MO=1000 npm test
+
+# Headed with specific viewport
+HEADED=true VIEWPORT=mobile npm test
+```
+
+**When to Use Headed Mode:**
+- 🐛 **Debugging tests** - Visual inspection of test execution
+- 🔍 **Test development** - Understanding page behavior
+- 📊 **Demo purposes** - Showing test execution to stakeholders
+- 🎯 **Troubleshooting** - Investigating test failures
+
+#### Configuration Examples
+
+```bash
+# Headless with maximum performance
+HEADED=false PARALLEL=5 npm run test:smoke
+
+# Headed with debugging features
+HEADED=true SLOW_MO=500 DEBUG=true npm test
+
+# Headless CI/CD execution
+CI=true HEADED=false npm run test:ci
+
+# Headed cross-browser testing
+HEADED=true BROWSER=firefox npm test
 ```
 
 ### Environment-Specific Tests
@@ -355,6 +419,91 @@ VERBOSE=true npm test
 
 # Run specific scenario with debugging
 npm test -- --tags "@debug"
+```
+
+### Headless Testing Best Practices
+
+#### Optimal Headless Configuration
+
+```bash
+# Production-ready headless setup
+HEADED=false PARALLEL=3 TIMEOUT=30000 npm run test:smoke
+
+# Fast headless execution for CI
+CI=true HEADED=false PARALLEL=5 npm run test:ci
+
+# Headless with performance monitoring
+HEADED=false DEBUG=false VERBOSE=false npm run test:performance
+```
+
+#### Headless Troubleshooting
+
+**Common Headless Issues and Solutions:**
+
+1. **Tests pass in headed but fail in headless mode:**
+   ```bash
+   # Add explicit waits for dynamic content
+   HEADED=false TIMEOUT=60000 npm test
+   
+   # Enable screenshots for debugging
+   HEADED=false npm test  # Screenshots auto-captured on failure
+   ```
+
+2. **Slow performance in headless mode:**
+   ```bash
+   # Optimize parallel execution
+   HEADED=false PARALLEL=3 npm test
+   
+   # Disable unnecessary features
+   HEADED=false VIDEO=false npm test
+   ```
+
+3. **Font rendering issues in headless:**
+   ```bash
+   # Install system fonts (Linux)
+   sudo apt-get install fonts-liberation fonts-dejavu-core
+   
+   # Run with font fallbacks
+   HEADED=false npm test
+   ```
+
+4. **Memory issues with long-running headless tests:**
+   ```bash
+   # Limit parallel workers
+   HEADED=false PARALLEL=2 npm test
+   
+   # Enable garbage collection
+   NODE_OPTIONS="--max-old-space-size=4096" HEADED=false npm test
+   ```
+
+#### Headless vs Headed Comparison
+
+| Aspect | Headless Mode | Headed Mode |
+|--------|---------------|-------------|
+| **Speed** | ⚡ Faster (2-3x) | 🐌 Slower |
+| **Resources** | 💚 Low CPU/Memory | 🔴 High CPU/Memory |
+| **CI/CD** | ✅ Perfect | ❌ Not suitable |
+| **Debugging** | ❌ Limited visibility | ✅ Full visibility |
+| **Parallel** | ✅ Excellent | ⚠️ Limited |
+| **Stability** | ✅ More stable | ⚠️ UI dependent |
+
+#### Headless Testing Strategies
+
+```bash
+# Development workflow
+HEADED=true npm run test:homepage  # Debug new tests
+HEADED=false npm run test:smoke    # Quick validation
+
+# CI/CD pipeline
+HEADED=false PARALLEL=5 npm run test:ci
+
+# Performance testing
+HEADED=false npm run test:performance
+
+# Cross-browser headless
+BROWSER=chromium HEADED=false npm test
+BROWSER=firefox HEADED=false npm test
+BROWSER=webkit HEADED=false npm test
 ```
 
 ### Screenshot Capture
