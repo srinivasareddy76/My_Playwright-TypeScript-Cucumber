@@ -6,11 +6,11 @@
 const common = [
   'tests/apps/frbsf/features/**/*.feature',
   '--require-module ts-node/register',
+  '--require-module tsconfig-paths/register',
   '--require tests/apps/frbsf/steps/**/*.ts',
   '--require src/common/hooks.ts',
   '--format-options \'{"snippetInterface": "async-await"}\'',
-  '--world-parameters \'{"foo": "bar"}\'',
-  '--publish-quiet'
+  '--world-parameters \'{"foo": "bar"}\''
 ].join(' ');
 
 const formats = [

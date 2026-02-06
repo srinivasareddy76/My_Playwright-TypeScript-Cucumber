@@ -792,6 +792,118 @@ BROWSER=firefox npm test
 DEBUG=* VERBOSE=true npm test
 ```
 
+### Common Installation Issues
+
+#### Issue 1: "Cannot find module 'tsconfig-paths/register'"
+
+**Error:**
+```
+error: Cannot find module 'tsconfig-paths/register'
+```
+
+**Solution:**
+```bash
+# Install missing dependency
+npm install --save-dev tsconfig-paths
+
+# Or reinstall all dependencies
+rm -rf node_modules package-lock.json
+npm install
+```
+
+#### Issue 2: Node.js Version Warning
+
+**Warning:**
+```
+This node.js version (V24.8.0) has not been tested with this version of cucumber
+```
+
+**Solution:**
+This is just a warning and can be safely ignored. The framework works with Node.js 18+ including version 24.x.
+
+#### Issue 3: "'publishquiet' option is no longer needed"
+
+**Warning:**
+```
+'publishquiet' option is no longer needed, you can remove it from your configuration
+```
+
+**Solution:**
+This warning has been fixed in the latest version. If you still see it, update your cucumber.js configuration by removing the `--publish-quiet` option.
+
+#### Issue 4: TypeScript Path Mapping Issues
+
+**Error:**
+```
+Cannot resolve module '@/config/environment'
+```
+
+**Solution:**
+Ensure your tsconfig.json includes the ts-node configuration:
+```json
+{
+  "ts-node": {
+    "require": ["tsconfig-paths/register"],
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
+}
+```
+
+#### Issue 5: Playwright Browsers Not Installed
+
+**Error:**
+```
+browserType.launch: Executable doesn't exist
+```
+
+**Solution:**
+```bash
+# Install Playwright browsers
+npx playwright install
+
+# Install with system dependencies (Linux)
+npx playwright install --with-deps
+
+# For specific browser only
+npx playwright install chromium
+```
+
+#### Issue 6: Permission Issues (Linux/Mac)
+
+**Error:**
+```
+EACCES: permission denied
+```
+
+**Solution:**
+```bash
+# Fix npm permissions
+sudo chown -R $(whoami) ~/.npm
+sudo chown -R $(whoami) /usr/local/lib/node_modules
+
+# Or use npm prefix
+npm config set prefix ~/.npm-global
+export PATH=~/.npm-global/bin:$PATH
+```
+
+### Quick Fix Commands
+
+```bash
+# Complete reinstall
+rm -rf node_modules package-lock.json
+npm install
+npx playwright install
+
+# Fix TypeScript issues
+npm run type-check
+npm install --save-dev tsconfig-paths
+
+# Verify installation
+npm test -- --dry-run
+```
+
 ## 📚 Additional Resources
 
 ### Documentation Links
