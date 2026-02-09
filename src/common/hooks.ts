@@ -103,7 +103,7 @@ Before(async function (this: ICustomWorld, scenario) {
     // await this.initializePageObjects();
 
     // Set scenario start time for performance measurement
-    // this.startPerformanceMeasurement();
+    this.testStartTime = Date.now();
 
     // Log scenario tags
     const tags = scenario.pickle.tags.map(tag => tag.name).join(', ');
@@ -142,7 +142,7 @@ After(async function (this: ICustomWorld, scenario) {
     }
 
     // Measure scenario performance
-    // const scenarioDuration = this.endPerformanceMeasurement(`Scenario: ${scenarioName}`);
+    const scenarioDuration = this.testStartTime ? Date.now() - this.testStartTime : 0;
 
     // Capture final screenshot for failed scenarios
     if (scenarioStatus === 'FAILED') {
