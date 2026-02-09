@@ -7,7 +7,7 @@ import { EnvironmentManager } from '../../src/config/environment';
 import { Logger } from '../../src/utils/logger';
 
 export abstract class BasePage {
-  protected page: Page;
+  protected page?: Page;
   protected browserManager: BrowserManager;
   protected environmentManager: EnvironmentManager;
   protected logger: Logger;
@@ -97,7 +97,11 @@ export abstract class BasePage {
     const element = await this.findElement(selector, options?.timeout);
     
     await element.waitFor({ state: 'visible' });
-    await element.click({ force: options?.force });
+    const clickOptions: any = {};
+    if (options?.force !== undefined) {
+      clickOptions.force = options.force;
+    }
+    await element.click(clickOptions);
   }
 
   protected async doubleClickElement(selector: string): Promise<void> {

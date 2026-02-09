@@ -39,9 +39,9 @@ export interface ICustomWorld extends World {
   traces: string[];
   
   // Test metadata
-  currentScenario?: string;
-  currentStep?: string;
-  testStartTime?: number;
+  currentScenario?: string | undefined;
+  currentStep?: string | undefined;
+  testStartTime?: number | undefined;
   
   // Helper methods
   initializePageObjects(): Promise<void>;
@@ -53,6 +53,20 @@ export interface ICustomWorld extends World {
   getTestData(key: string): any;
   setScenarioContext(key: string, value: any): void;
   getScenarioContext(key: string): any;
+  
+  // Viewport management methods
+  setMobileViewport(): Promise<void>;
+  setTabletViewport(): Promise<void>;
+  setDesktopViewport(): Promise<void>;
+  
+  // Page management methods
+  refreshCurrentPage(): Promise<void>;
+  waitForPageLoad(): Promise<void>;
+  validateCurrentPageLoaded(): Promise<boolean>;
+  
+  // Performance measurement methods
+  startPerformanceMeasurement(): void;
+  endPerformanceMeasurement(actionName: string): number;
 }
 
 export class CustomWorld extends World implements ICustomWorld {
@@ -106,8 +120,9 @@ export class CustomWorld extends World implements ICustomWorld {
     try {
       // Get the current page from browser manager
       this.page = await this.browserManager.getCurrentPage();
-      this.context = this.browserManager['context'];
-      this.browser = this.browserManager['browser'];
+      // Note: These will be set when browser context is created
+      this.context = this.browserManager['context'] || undefined;
+      this.browser = this.browserManager['browser'] || undefined;
       
       // Initialize page objects with the current page
       this.homePage = new HomePage(this.page);
@@ -338,6 +353,32 @@ export class CustomWorld extends World implements ICustomWorld {
   public async waitForTimeout(milliseconds: number): Promise<void> {
     await this.page?.waitForTimeout(milliseconds);
     this.logger.info(`Waited for ${milliseconds}ms`);
+  }
+
+  // Missing methods from interface
+  public cleanupTestData(): void {
+    // Clear any test data
+    this.testData.clear();
+    this.scenarioContext.clear();
+    
+    // Reset test metadata
+    this.currentScenario = undefined;
+    this.currentStep = undefined;
+    this.testStartTime = undefined;
+    
+    this.logger.info('Test data cleaned up');
+  }
+
+  public async validateCurrentPageLoaded(): Promise<boolean> {
+    try {
+      if (!this.page) {
+        return false;
+      }
+      await this.page.waitForLoadState('domcontentloaded', { timeout: 5000 });
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
 

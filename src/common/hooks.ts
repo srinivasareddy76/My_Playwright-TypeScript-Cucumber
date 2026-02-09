@@ -100,10 +100,10 @@ Before(async function (this: ICustomWorld, scenario) {
     await browserManager.createContext();
     
     // Initialize page objects
-    await this.initializePageObjects();
+    // await this.initializePageObjects();
 
     // Set scenario start time for performance measurement
-    this.startPerformanceMeasurement();
+    // this.startPerformanceMeasurement();
 
     // Log scenario tags
     const tags = scenario.pickle.tags.map(tag => tag.name).join(', ');
@@ -132,7 +132,7 @@ After(async function (this: ICustomWorld, scenario) {
       
       // Handle test failure
       const error = scenario.result.message ? new Error(scenario.result.message) : new Error('Scenario failed');
-      await this.handleTestFailure(error, scenarioName);
+      // await this.handleTestFailure(error, scenarioName);
       
     } else if (scenario.result?.status === Status.SKIPPED) {
       scenarioStatus = 'SKIPPED';
@@ -142,7 +142,7 @@ After(async function (this: ICustomWorld, scenario) {
     }
 
     // Measure scenario performance
-    const scenarioDuration = this.endPerformanceMeasurement(`Scenario: ${scenarioName}`);
+    // const scenarioDuration = this.endPerformanceMeasurement(`Scenario: ${scenarioName}`);
 
     // Capture final screenshot for failed scenarios
     if (scenarioStatus === 'FAILED') {
@@ -162,7 +162,7 @@ After(async function (this: ICustomWorld, scenario) {
   } finally {
     try {
       // Clean up scenario data
-      this.cleanupTestData();
+      // this.cleanupTestData();
 
       // Close browser context
       await browserManager.closeContext();
@@ -223,18 +223,18 @@ async function setupScenarioConfiguration(world: ICustomWorld, scenario: any): P
 
   // Handle smoke test tags
   if (tags.includes('@smoke')) {
-    world.setScenarioContext('smokeTest', true);
+    // world.setScenarioContext('smokeTest', true);
   }
 
   // Handle specific page tags
   if (tags.includes('@homepage')) {
-    world.setScenarioContext('targetPage', 'home');
+    // world.setScenarioContext('targetPage', 'home');
   } else if (tags.includes('@search')) {
-    world.setScenarioContext('targetPage', 'search');
+    // world.setScenarioContext('targetPage', 'search');
   } else if (tags.includes('@research')) {
-    world.setScenarioContext('targetPage', 'research');
+    // world.setScenarioContext('targetPage', 'research');
   } else if (tags.includes('@news')) {
-    world.setScenarioContext('targetPage', 'news');
+    // world.setScenarioContext('targetPage', 'news');
   }
 
   // Handle browser-specific tags

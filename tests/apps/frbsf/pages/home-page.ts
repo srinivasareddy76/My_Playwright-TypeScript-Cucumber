@@ -161,6 +161,43 @@ export class HomePage extends BasePage {
     }
   }
 
+  // Public methods for step definitions
+  public async isElementVisible(selector: string): Promise<boolean> {
+    return super.isElementVisible(selector);
+  }
+
+  public async isElementEnabled(selector: string): Promise<boolean> {
+    return super.isElementEnabled(selector);
+  }
+
+  public async typeText(selector: string, text: string, options?: { clear?: boolean; delay?: number }): Promise<void> {
+    return super.typeText(selector, text, options);
+  }
+
+  public async getPage(): Promise<Page> {
+    return super.getPage();
+  }
+
+  public async waitForUrl(urlPattern: string | RegExp, timeout?: number): Promise<void> {
+    return super.waitForUrl(urlPattern, timeout);
+  }
+
+  public async getElementCount(selector: string): Promise<number> {
+    return super.getElementCount(selector);
+  }
+
+  public async scrollToBottom(): Promise<void> {
+    return super.scrollToBottom();
+  }
+
+  public async scrollToElement(selector: string): Promise<void> {
+    return super.scrollToElement(selector);
+  }
+
+  public async clickElement(selector: string, options?: { timeout?: number; force?: boolean }): Promise<void> {
+    return super.clickElement(selector, options);
+  }
+
   public async validateFederalReserveBranding(): Promise<boolean> {
     const title = await this.getPageTitle();
     const logoVisible = await this.isElementVisible(this.selectors.logo);

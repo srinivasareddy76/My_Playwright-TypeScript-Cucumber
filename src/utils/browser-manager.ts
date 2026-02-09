@@ -78,16 +78,21 @@ export class BrowserManager {
     });
 
     try {
-      this.context = await this.browser!.newContext({
+      const contextOptions: any = {
         viewport: browserConfig.viewport,
-        recordVideo: browserConfig.video ? {
-          dir: './reports/videos/',
-          size: browserConfig.viewport
-        } : undefined,
         recordHar: {
           path: './reports/network.har'
         }
-      });
+      };
+
+      if (browserConfig.video) {
+        contextOptions.recordVideo = {
+          dir: './reports/videos/',
+          size: browserConfig.viewport
+        };
+      }
+
+      this.context = await this.browser!.newContext(contextOptions);
 
       // Set default timeouts
       this.context.setDefaultTimeout(browserConfig.timeout);

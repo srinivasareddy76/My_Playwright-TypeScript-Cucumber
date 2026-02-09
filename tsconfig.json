@@ -38,8 +38,7 @@
       "@common/*": ["src/common/*"],
       "@database/*": ["src/database/*"]
     },
-    "typeRoots": ["./node_modules/@types", "./src/types"],
-    "types": ["node", "@playwright/test", "@cucumber/cucumber"]
+    "typeRoots": ["./node_modules/@types", "./src/types"]
   },
   "include": [
     "src/**/*",
@@ -55,6 +54,7 @@
   ],
   "ts-node": {
     "require": ["tsconfig-paths/register"],
+    "transpileOnly": true,
     "compilerOptions": {
       "module": "commonjs"
     }

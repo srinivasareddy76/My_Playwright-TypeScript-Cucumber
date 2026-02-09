@@ -3,7 +3,7 @@
 
 import { Given, When, Then } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
-import { ICustomWorld } from '../../../../src/common/world';
+import { ICustomWorld } from '@common/world';
 
 Given('I am using a {word} device', async function (this: ICustomWorld, deviceType: string) {
   this.logger.step('Setup', `Setting up ${deviceType} device viewport`);

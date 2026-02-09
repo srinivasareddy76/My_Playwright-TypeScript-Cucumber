@@ -2,7 +2,7 @@
 
 import { Given, When, Then } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
-import { ICustomWorld } from '../../../../src/common/world';
+import { ICustomWorld } from '@common/world';
 
 Given('I am on the News & Media page', async function (this: ICustomWorld) {
   this.logger.step('Navigation', 'Navigating to News & Media page');

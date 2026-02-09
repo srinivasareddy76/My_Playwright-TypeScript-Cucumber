@@ -94,11 +94,13 @@ export class EnvironmentManager {
 
   private constructor() {
     const envName = process.env.ENV || 't3';
-    this.currentEnvironment = environments[envName];
+    const environment = environments[envName];
     
-    if (!this.currentEnvironment) {
+    if (!environment) {
       throw new Error(`Environment '${envName}' not found. Available environments: ${Object.keys(environments).join(', ')}`);
     }
+
+    this.currentEnvironment = environment;
 
     // Override browser settings based on environment variables
     this.applyEnvironmentOverrides();

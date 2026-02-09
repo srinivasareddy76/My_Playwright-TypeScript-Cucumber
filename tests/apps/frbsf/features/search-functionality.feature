@@ -71,7 +71,7 @@ Feature: FRBSF Search Functionality
   Scenario: Empty search is handled appropriately
     When I perform an empty search
     Then I should see an appropriate message
-    Or I should remain on the current page
+    And I should remain on the current page
     And no error should occur
 
   @no-results @handling

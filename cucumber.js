@@ -16,8 +16,7 @@ const common = [
 const formats = [
   '--format progress-bar',
   '--format json:reports/cucumber-report.json',
-  '--format html:reports/cucumber-report.html',
-  '--format @cucumber/pretty-formatter'
+  '--format html:reports/cucumber-report.html'
 ].join(' ');
 
 module.exports = {
