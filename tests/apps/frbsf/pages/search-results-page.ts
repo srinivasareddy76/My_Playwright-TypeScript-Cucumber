@@ -15,11 +15,11 @@ export class SearchResultsPage extends BasePage {
     searchQuery: '[data-testid="search-query"], .search-term, .query-display',
     
     // Results container
-    resultsContainer: '[data-testid="search-results"], .search-results, .results-container',
-    resultsList: '[data-testid="results-list"], .results-list, .search-items',
+    resultsContainer: 'main#wp--skip-link--target, main, [data-testid="search-results"]',
+    resultsList: '[class*="post"], .results-list, .search-items, [data-testid="results-list"]',
     
     // Individual result items
-    resultItem: '[data-testid="result-item"], .result-item, .search-result',
+    resultItem: '[class*="post"], .result-item, .search-result, [data-testid="result-item"]',
     resultTitle: '[data-testid="result-title"], .result-title, .result h3, .result h2',
     resultDescription: '[data-testid="result-description"], .result-description, .result-snippet',
     resultLink: '[data-testid="result-link"], .result-link, .result a',
@@ -191,7 +191,8 @@ export class SearchResultsPage extends BasePage {
       return false;
     }
 
-    const resultCount = await this.getResultsCount();
+    // For FRBSF search results, just check if we have any post elements
+    const resultCount = await this.getElementCount(this.selectors.resultItem);
     return resultCount > 0;
   }
 

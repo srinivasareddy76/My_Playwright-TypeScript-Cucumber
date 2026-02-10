@@ -108,14 +108,14 @@ When('I click on the search button', async function (this: ICustomWorld) {
 
 Then('I should see the search input field', async function (this: ICustomWorld) {
   this.logger.step('Verification', 'Checking for search input field');
-  const searchInputVisible = await this.homePage.isElementVisible('[data-testid="search-input"], input[type="search"], #search-input');
+  const searchInputVisible = await this.homePage.isElementVisible('#sffed-search-input, input[name="s"][type="search"]');
   expect(searchInputVisible).toBe(true);
   this.logger.assertion('Search input field is visible', searchInputVisible);
 });
 
 When('I enter {string} in the search field', async function (this: ICustomWorld, searchTerm: string) {
   this.logger.step('Interaction', `Entering search term: ${searchTerm}`);
-  await this.homePage.typeText('[data-testid="search-input"], input[type="search"], #search-input', searchTerm);
+  await this.homePage.typeText('#sffed-search-input, input[name="s"][type="search"]', searchTerm);
   this.setScenarioContext('searchTerm', searchTerm);
 });
 
@@ -127,9 +127,9 @@ When('I press Enter', async function (this: ICustomWorld) {
 
 Then('I should be redirected to the search results page', async function (this: ICustomWorld) {
   this.logger.step('Verification', 'Checking redirection to search results page');
-  await this.homePage.waitForUrl(/search|results/i);
+  await this.homePage.waitForUrl(/\?s=|search|results/i);
   const currentUrl = await this.homePage.getCurrentUrl();
-  expect(currentUrl).toMatch(/search|results/i);
+  expect(currentUrl).toMatch(/\?s=|search|results/i);
   this.logger.assertion('Redirected to search results page', true);
   this.setScenarioContext('currentPage', 'search-results');
 });

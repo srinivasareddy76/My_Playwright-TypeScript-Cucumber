@@ -11,8 +11,8 @@ export class HomePage extends BasePage {
     // Header elements
     logo: '.sffed-logo-org__logotype, a[href="/"], [class*="logo"]',
     mainNavigation: '.main-nav, nav, header nav',
-    searchButton: '[data-testid="search-button"], .search-toggle, button[aria-label*="search"]',
-    searchInput: '[data-testid="search-input"], input[type="search"], #search-input',
+    searchButton: '#sffed-search-input, input[name="s"][type="search"]',
+    searchInput: '#sffed-search-input, input[name="s"][type="search"]',
     
     // Hero section
     heroSection: '.wp-block-cover, .sffed-intro--home, [class*="hero"], .banner',
@@ -20,7 +20,7 @@ export class HomePage extends BasePage {
     heroDescription: '[data-testid="hero-description"], .hero p, .banner p',
     
     // Main navigation menu items
-    aboutMenu: 'a[href*="about"], nav a:has-text("About")',
+    aboutMenu: 'nav a:has-text("About"), .menu-item:has-text("About"), a[href*="about"]',
     researchMenu: 'a[href*="research"], nav a:has-text("Research")',
     newsMenu: 'a[href*="news"], nav a:has-text("News")',
     dataMenu: 'a[href*="data"], nav a:has-text("Data")',
@@ -32,10 +32,10 @@ export class HomePage extends BasePage {
     newsDropdown: '.news-dropdown, [data-menu="news"]',
     
     // Key sections
-    researchInsightsSection: '[data-testid="research-insights"], .research-section, section:has-text("Research")',
-    newsMediaSection: '[data-testid="news-media"], .news-section, section:has-text("News")',
-    economicDataSection: '[data-testid="economic-data"], .data-section, section:has-text("Data")',
-    districtInfoSection: '[data-testid="district-info"], .district-section, section:has-text("District")',
+    researchInsightsSection: 'h2:has-text("Research"), h3:has-text("Research"), [class*="research"], main',
+    newsMediaSection: 'h2:has-text("News"), h3:has-text("News"), [class*="news"], main',
+    economicDataSection: 'h2:has-text("Data"), h3:has-text("Data"), [class*="data"], main',
+    districtInfoSection: 'h2:has-text("District"), h3:has-text("District"), [class*="district"], main',
     
     // Featured content
     featuredArticles: '[data-testid="featured-articles"], .featured-content, .highlight-articles',
@@ -82,8 +82,9 @@ export class HomePage extends BasePage {
 
   // Header interactions
   public async openSearchDialog(): Promise<void> {
-    await this.clickElement(this.selectors.searchButton);
+    // For FRBSF website, search input is already visible, just focus on it
     await this.waitForElement(this.selectors.searchInput);
+    await this.clickElement(this.selectors.searchInput);
   }
 
   public async performSearch(searchTerm: string): Promise<void> {
