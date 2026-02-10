@@ -92,6 +92,497 @@ node verify-installation.js
 npm run test:headless -- --tags "@basic"
 ```
 
+## 📋 Essential Configuration Files
+
+The framework relies on several key configuration files that control behavior, environment settings, and test execution. Understanding these files is crucial for proper setup and customization.
+
+### 🔧 `.env` File - Environment Configuration
+
+#### **Purpose and Importance**
+The `.env` file is the **primary configuration file** that controls all aspects of test execution. It allows you to customize the framework behavior without modifying code, making it perfect for different environments and team members.
+
+#### **Setup Process**
+```bash
+# 1. Copy the template file
+cp .env.example .env
+
+# 2. Edit the .env file with your preferred settings
+nano .env  # or use your preferred editor
+
+# 3. The .env file is automatically loaded by the framework
+```
+
+#### **Complete Configuration Reference**
+
+```env
+# ========================================
+# CORE TEST ENVIRONMENT SETTINGS
+# ========================================
+
+# Test Environment Selection
+ENV=t3                    # Options: t3, t5
+                         # t3: Test environment 3 (https://frbsf.org)
+                         # t5: Test environment 5 (https://frbsf.org)
+
+# ========================================
+# BROWSER CONFIGURATION
+# ========================================
+
+# Browser Selection
+BROWSER=chromium         # Options: chromium, firefox, webkit
+                        # chromium: Google Chrome/Chromium (recommended)
+                        # firefox: Mozilla Firefox
+                        # webkit: Safari WebKit engine
+
+# Display Mode
+HEADED=false            # Options: true, false
+                       # true: Show browser window (debugging)
+                       # false: Run headless (CI/CD, faster)
+
+# Screen Resolution
+VIEWPORT=desktop        # Options: desktop, tablet, mobile
+                       # desktop: 1920x1080 (default)
+                       # tablet: 768x1024
+                       # mobile: 375x667
+
+# Performance Settings
+TIMEOUT=30000          # Default timeout in milliseconds (30 seconds)
+SLOW_MO=0             # Delay between actions in ms (0 = no delay)
+
+# ========================================
+# TEST EXECUTION CONTROL
+# ========================================
+
+# Parallel Execution
+PARALLEL=3            # Number of parallel test workers
+                     # Higher = faster execution, more resource usage
+                     # Lower = more stable, less resource usage
+
+# Retry Configuration
+RETRY=2              # Number of retry attempts for failed tests
+                    # 0 = no retries, 1-3 = recommended range
+
+# Test Selection
+TAGS=@smoke         # Default Cucumber tags to run
+                   # Examples: @smoke, @critical, @homepage
+                   # Multiple: "@smoke and @critical"
+
+# ========================================
+# DATABASE CONFIGURATION (Optional)
+# ========================================
+
+# Database Connection (Override environment defaults)
+DB_HOST=                    # Database hostname
+DB_PORT=1521               # Database port (Oracle default)
+DB_SERVICE_ID=             # Database service identifier
+DB_USERNAME=               # Database username
+DB_PASSWORD=               # Database password (keep secure!)
+
+# ========================================
+# APPLICATION CREDENTIALS (Optional)
+# ========================================
+
+# Application-specific passwords
+APP_PASSWORD=              # Main application password
+ISVA_PASSWORD=            # ISVA system password
+
+# ========================================
+# REPORTING AND ARTIFACTS
+# ========================================
+
+# Report Locations
+REPORT_PATH=./reports                    # Main reports directory
+SCREENSHOT_PATH=./reports/screenshots    # Screenshot storage
+VIDEO_PATH=./reports/videos             # Video recording storage
+
+# ========================================
+# CI/CD AND AUTOMATION
+# ========================================
+
+# CI/CD Detection
+CI=false                  # Set to true in CI/CD pipelines
+GITHUB_ACTIONS=false     # Auto-detected in GitHub Actions
+
+# ========================================
+# DEBUGGING AND DEVELOPMENT
+# ========================================
+
+# Debug Settings
+DEBUG=false              # Enable detailed debug logging
+VERBOSE=false           # Enable verbose output
+```
+
+#### **Environment-Specific Examples**
+
+**Development Setup (Local Testing)**
+```env
+ENV=t3
+BROWSER=chromium
+HEADED=true              # See browser for debugging
+VIEWPORT=desktop
+TIMEOUT=30000
+SLOW_MO=500             # Slow down for observation
+PARALLEL=1              # Single thread for debugging
+RETRY=0                 # No retries for faster feedback
+DEBUG=true              # Detailed logging
+VERBOSE=true            # Extra output
+```
+
+**CI/CD Setup (Automated Testing)**
+```env
+ENV=t3
+BROWSER=chromium
+HEADED=false            # Headless for CI/CD
+VIEWPORT=desktop
+TIMEOUT=60000           # Longer timeout for slower CI
+SLOW_MO=0              # No delays
+PARALLEL=3             # Parallel execution
+RETRY=2                # Retry failed tests
+CI=true                # CI mode
+DEBUG=false            # Minimal logging
+```
+
+**Cross-Browser Testing**
+```env
+# For Chromium
+BROWSER=chromium
+HEADED=false
+
+# For Firefox (change and re-run)
+BROWSER=firefox
+HEADED=false
+
+# For WebKit (change and re-run)
+BROWSER=webkit
+HEADED=false
+```
+
+#### **Security Best Practices**
+```bash
+# ✅ DO: Keep .env file secure
+echo ".env" >> .gitignore
+
+# ✅ DO: Use environment-specific values
+# Development: DEBUG=true, HEADED=true
+# Production: DEBUG=false, HEADED=false
+
+# ❌ DON'T: Commit real passwords
+# Use placeholder values in .env.example
+# Store real credentials in CI/CD secrets
+
+# ✅ DO: Rotate credentials regularly
+# Update passwords and API keys periodically
+```
+
+### 🔍 `verify-installation.js` - Installation Validator
+
+#### **Purpose and Functionality**
+The `verify-installation.js` script is a **comprehensive installation checker** that validates your framework setup before running tests. It prevents common setup issues and provides clear feedback on missing components.
+
+#### **What It Checks**
+
+**1. Required Files Validation**
+```javascript
+// Checks for essential framework files
+const requiredFiles = [
+  'package.json',           // Node.js project configuration
+  'tsconfig.json',          // TypeScript configuration
+  'cucumber.js',            // Cucumber test profiles
+  '.env.example',           // Environment template
+  'src/common/world.ts',    // Cucumber world context
+  'src/config/environment.ts', // Environment management
+  // ... all step definition files
+];
+```
+
+**2. Dependency Verification**
+```javascript
+// Validates critical npm packages
+const criticalDeps = [
+  '@cucumber/cucumber',     // BDD test framework
+  '@playwright/test',       // Browser automation
+  'typescript',            // TypeScript compiler
+  'ts-node',              // TypeScript execution
+  'tsconfig-paths'        // Path mapping support
+];
+```
+
+**3. Browser Installation Check**
+```javascript
+// Verifies Playwright browsers are installed
+const browsers = ['chromium', 'firefox', 'webkit'];
+// Checks if browser binaries are available
+```
+
+**4. Configuration Validation**
+```javascript
+// Validates configuration files
+- TypeScript compilation check
+- Cucumber profile validation
+- Environment configuration test
+```
+
+#### **Usage Examples**
+
+**Basic Verification**
+```bash
+# Run the verification script
+node verify-installation.js
+
+# Expected output:
+# 🔍 Verifying Playwright TypeScript Cucumber Framework Installation...
+# 
+# 📁 Checking required files:
+#    ✅ package.json
+#    ✅ tsconfig.json
+#    ✅ cucumber.js
+#    ... (all files listed)
+# 
+# 📦 Checking dependencies:
+#    ✅ node_modules directory
+#    ✅ @cucumber/cucumber
+#    ✅ @playwright/test
+#    ... (all dependencies listed)
+# 
+# 🎭 Checking Playwright browsers:
+#    ✅ Chromium browser installed
+#    ✅ Firefox browser installed
+#    ✅ WebKit browser installed
+# 
+# ✅ All checks passed! Framework is ready to use.
+```
+
+**Troubleshooting Failed Checks**
+```bash
+# If verification fails:
+node verify-installation.js
+
+# Example failure output:
+# ❌ @playwright/test
+# ❌ Chromium browser not installed
+
+# Fix missing dependencies:
+npm install
+
+# Fix missing browsers:
+npx playwright install
+
+# Re-run verification:
+node verify-installation.js
+```
+
+#### **Integration with Development Workflow**
+```bash
+# Add to package.json scripts
+{
+  "scripts": {
+    "verify": "node verify-installation.js",
+    "pretest": "npm run verify",  # Auto-verify before tests
+    "setup": "npm install && npx playwright install && npm run verify"
+  }
+}
+
+# Use in CI/CD pipelines
+- name: Verify Installation
+  run: node verify-installation.js
+```
+
+### ⚙️ `cucumber.js` - Test Execution Profiles
+
+#### **Purpose and Architecture**
+The `cucumber.js` file defines **test execution profiles** that control how Cucumber runs your tests. It provides pre-configured setups for different testing scenarios, environments, and execution modes.
+
+#### **Profile Structure and Configuration**
+
+**Base Configuration**
+```javascript
+// Common settings shared across all profiles
+const common = [
+  'tests/apps/frbsf/features/**/*.feature',  // Feature file locations
+  '--require-module ts-node/register',       // TypeScript support
+  '--require-module tsconfig-paths/register', // Path mapping
+  '--require src/common/world.ts',           // Cucumber world
+  '--require tests/apps/frbsf/steps/**/*.ts', // Step definitions
+  '--require src/common/hooks.ts',           // Before/After hooks
+  '--format-options \'{"snippetInterface": "async-await"}\'',
+  '--world-parameters \'{"foo": "bar"}\''
+].join(' ');
+
+// Report formatting options
+const formats = [
+  '--format progress-bar',                    // Console progress
+  '--format json:reports/cucumber-report.json', // JSON report
+  '--format html:reports/cucumber-report.html'  // HTML report
+].join(' ');
+```
+
+#### **Available Profiles and Usage**
+
+**1. Basic Execution Profiles**
+```bash
+# Default profile (all tests)
+npm test
+# Uses: cucumber.js default profile
+
+# Headed mode (visible browser)
+npm run test:headed
+# Uses: cucumber.js headed profile
+
+# Headless mode (background)
+npm run test:headless
+# Uses: cucumber.js headless profile
+```
+
+**2. Test Category Profiles**
+```bash
+# Smoke tests (critical functionality)
+npm run test:smoke
+# Profile: --tags "@smoke"
+
+# Critical tests (high priority)
+npm run test:critical
+# Profile: --tags "@critical"
+
+# Homepage-specific tests
+npm run test:homepage
+# Profile: --tags "@homepage"
+
+# Search functionality tests
+npm run test:search
+# Profile: --tags "@search"
+```
+
+**3. Environment-Specific Profiles**
+```bash
+# T3 environment tests
+npm run test:smoke:t3
+# Profile: --tags "not @t5-only"
+
+# T5 environment tests
+npm run test:smoke:t5
+# Profile: --tags "not @t3-only"
+```
+
+**4. Browser-Specific Profiles**
+```bash
+# Chromium browser tests
+npm run test:chromium
+# Profile: --tags "not @firefox-only and not @webkit-only"
+
+# Firefox browser tests
+npm run test:firefox
+# Profile: --tags "not @chromium-only and not @webkit-only"
+
+# WebKit browser tests
+npm run test:webkit
+# Profile: --tags "not @chromium-only and not @firefox-only"
+```
+
+**5. Performance and Execution Profiles**
+```bash
+# Parallel execution (faster)
+npm run test:parallel
+# Profile: --parallel 3
+
+# Retry failed tests
+npm run test:retry
+# Profile: --retry 2
+
+# CI/CD optimized
+npm run test:ci
+# Profile: JSON + JUnit reports, no HTML
+```
+
+#### **Custom Profile Configuration**
+
+**Creating New Profiles**
+```javascript
+// Add to cucumber.js
+module.exports = {
+  // ... existing profiles ...
+  
+  // Custom profile for API tests
+  'api-tests': `${common} ${formats} --tags "@api"`,
+  
+  // Custom profile for mobile testing
+  'mobile-only': `${common} ${formats} --tags "@mobile and not @desktop-only"`,
+  
+  // Custom profile for regression testing
+  'full-regression': `${common} ${formats} --tags "not @skip and not @wip" --parallel 5`,
+  
+  // Custom profile for debugging
+  'debug-mode': `${common} --format progress-bar --tags "@debug" --fail-fast`
+};
+```
+
+**Using Custom Profiles**
+```bash
+# Add to package.json
+{
+  "scripts": {
+    "test:api": "cucumber-js --profile api-tests",
+    "test:mobile": "cucumber-js --profile mobile-only",
+    "test:regression": "cucumber-js --profile full-regression",
+    "test:debug": "cucumber-js --profile debug-mode"
+  }
+}
+
+# Run custom profiles
+npm run test:api
+npm run test:mobile
+npm run test:regression
+```
+
+#### **Advanced Profile Features**
+
+**Tag Combinations**
+```javascript
+// Complex tag logic
+'complex-tags': `${common} ${formats} --tags "(@smoke or @critical) and not @skip and not @manual"`
+
+// Environment-specific with feature tags
+'smoke-t3': `${common} ${formats} --tags "@smoke and not @t5-only"`
+```
+
+**Report Customization**
+```javascript
+// Different report formats for different profiles
+'ci-reports': `${common} --format json:reports/ci-report.json --format junit:reports/junit.xml`,
+'dev-reports': `${common} --format progress-bar --format html:reports/dev-report.html`
+```
+
+**Performance Optimization**
+```javascript
+// High-performance profile
+'performance': `${common} ${formats} --parallel 5 --retry 1 --fail-fast --tags "@smoke"`
+
+// Thorough testing profile
+'thorough': `${common} ${formats} --parallel 1 --retry 3 --tags "not @skip"`
+```
+
+#### **Profile Selection Strategy**
+
+**Development Phase**
+```bash
+npm run test:headed     # Visual debugging
+npm run test:debug      # Specific issue investigation
+npm run test:smoke      # Quick validation
+```
+
+**CI/CD Pipeline**
+```bash
+npm run test:ci         # Optimized for automation
+npm run test:parallel   # Fast execution
+npm run test:retry      # Handle flaky tests
+```
+
+**Release Testing**
+```bash
+npm run test:regression # Full test suite
+npm run test:cross-browser # Multiple browsers
+npm run test:performance   # Performance validation
+```
+
 ### 3. Environment Setup
 
 #### Understanding Environment Configuration
