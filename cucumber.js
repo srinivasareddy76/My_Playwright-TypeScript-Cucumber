@@ -7,6 +7,7 @@ const common = [
   'tests/apps/frbsf/features/**/*.feature',
   '--require-module ts-node/register',
   '--require-module tsconfig-paths/register',
+  '--require src/common/world.ts',
   '--require tests/apps/frbsf/steps/**/*.ts',
   '--require src/common/hooks.ts',
   '--format-options \'{"snippetInterface": "async-await"}\'',

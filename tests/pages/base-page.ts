@@ -228,11 +228,22 @@ export abstract class BasePage {
 
   protected async isElementVisible(selector: string): Promise<boolean> {
     try {
-      const element = await this.findElement(selector);
-      const isVisible = await element.isVisible();
-      this.logger.pageAction(this.constructor.name, `Element ${selector} visibility: ${isVisible}`);
-      return isVisible;
-    } catch {
+      const page = await this.getPage();
+      const elements = await page.locator(selector).all();
+      
+      // Check if any of the matching elements is visible
+      for (const element of elements) {
+        const isVisible = await element.isVisible();
+        if (isVisible) {
+          this.logger.pageAction(this.constructor.name, `Element ${selector} visibility: ${isVisible}`);
+          return true;
+        }
+      }
+      
+      this.logger.pageAction(this.constructor.name, `Element ${selector} visibility: false (no visible elements found)`);
+      return false;
+    } catch (error) {
+      this.logger.pageAction(this.constructor.name, `Element ${selector} visibility check failed: ${error}`);
       return false;
     }
   }

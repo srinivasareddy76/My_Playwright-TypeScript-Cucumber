@@ -10,14 +10,12 @@ import { EnvironmentManager } from '../config/environment';
 import { Logger } from '../utils/logger';
 import { HomePage } from '../../tests/apps/frbsf/pages/home-page';
 import { SearchResultsPage } from '../../tests/apps/frbsf/pages/search-results-page';
-import { ResearchInsightsPage } from '../../tests/apps/frbsf/pages/research-insights-page';
-import { NewsMediaPage } from '../../tests/apps/frbsf/pages/news-media-page';
 
 export interface ICustomWorld extends World {
   // Browser instances
-  browser?: Browser;
-  context?: BrowserContext;
-  page?: Page;
+  browser?: Browser | undefined;
+  context?: BrowserContext | undefined;
+  page?: Page | undefined;
   
   // Managers and utilities
   browserManager: BrowserManager;
@@ -27,8 +25,6 @@ export interface ICustomWorld extends World {
   // Page Object Models
   homePage: HomePage;
   searchResultsPage: SearchResultsPage;
-  researchInsightsPage: ResearchInsightsPage;
-  newsMediaPage: NewsMediaPage;
   
   // Test data and state
   testData: Map<string, any>;
@@ -70,9 +66,9 @@ export interface ICustomWorld extends World {
 }
 
 export class CustomWorld extends World implements ICustomWorld {
-  public browser?: Browser;
-  public context?: BrowserContext;
-  public page?: Page;
+  public browser?: Browser | undefined;
+  public context?: BrowserContext | undefined;
+  public page?: Page | undefined;
   
   public browserManager: BrowserManager;
   public environmentManager: EnvironmentManager;
@@ -80,8 +76,6 @@ export class CustomWorld extends World implements ICustomWorld {
   
   public homePage: HomePage;
   public searchResultsPage: SearchResultsPage;
-  public researchInsightsPage: ResearchInsightsPage;
-  public newsMediaPage: NewsMediaPage;
   
   public testData: Map<string, any>;
   public scenarioContext: Map<string, any>;
@@ -110,8 +104,6 @@ export class CustomWorld extends World implements ICustomWorld {
     // Initialize page objects (will be properly set up in initializePageObjects)
     this.homePage = new HomePage();
     this.searchResultsPage = new SearchResultsPage();
-    this.researchInsightsPage = new ResearchInsightsPage();
-    this.newsMediaPage = new NewsMediaPage();
     
     this.logger.info('CustomWorld initialized');
   }
@@ -127,8 +119,6 @@ export class CustomWorld extends World implements ICustomWorld {
       // Initialize page objects with the current page
       this.homePage = new HomePage(this.page);
       this.searchResultsPage = new SearchResultsPage(this.page);
-      this.researchInsightsPage = new ResearchInsightsPage(this.page);
-      this.newsMediaPage = new NewsMediaPage(this.page);
       
       this.logger.info('Page objects initialized successfully');
     } catch (error) {
@@ -142,9 +132,9 @@ export class CustomWorld extends World implements ICustomWorld {
     this.scenarioContext.clear();
     this.screenshots = [];
     this.traces = [];
-    this.currentScenario = undefined;
-    this.currentStep = undefined;
-    this.testStartTime = undefined;
+    delete this.currentScenario;
+    delete this.currentStep;
+    delete this.testStartTime;
     
     this.logger.info('Test data cleaned up');
   }
@@ -221,16 +211,6 @@ export class CustomWorld extends World implements ICustomWorld {
     this.setScenarioContext('currentPage', 'search-results');
   }
 
-  public async navigateToResearch(): Promise<void> {
-    await this.researchInsightsPage.navigateToResearchPage();
-    this.setScenarioContext('currentPage', 'research');
-  }
-
-  public async navigateToNews(): Promise<void> {
-    await this.newsMediaPage.navigateToNewsPage();
-    this.setScenarioContext('currentPage', 'news');
-  }
-
   // Validation helper methods
   public async validateCurrentPageLoaded(): Promise<boolean> {
     const currentPage = this.getScenarioContext('currentPage');
@@ -240,10 +220,6 @@ export class CustomWorld extends World implements ICustomWorld {
         return await this.homePage.isPageLoaded();
       case 'search-results':
         return await this.searchResultsPage.isPageLoaded();
-      case 'research':
-        return await this.researchInsightsPage.isPageLoaded();
-      case 'news':
-        return await this.newsMediaPage.isPageLoaded();
       default:
         this.logger.warn(`Unknown page type: ${currentPage}`);
         return false;
@@ -264,7 +240,7 @@ export class CustomWorld extends World implements ICustomWorld {
     
     const duration = Date.now() - this.testStartTime;
     this.logger.performance(actionName, duration);
-    this.testStartTime = undefined;
+    delete this.testStartTime;
     
     return duration;
   }
@@ -355,31 +331,9 @@ export class CustomWorld extends World implements ICustomWorld {
     this.logger.info(`Waited for ${milliseconds}ms`);
   }
 
-  // Missing methods from interface
-  public cleanupTestData(): void {
-    // Clear any test data
-    this.testData.clear();
-    this.scenarioContext.clear();
-    
-    // Reset test metadata
-    this.currentScenario = undefined;
-    this.currentStep = undefined;
-    this.testStartTime = undefined;
-    
-    this.logger.info('Test data cleaned up');
-  }
+  
 
-  public async validateCurrentPageLoaded(): Promise<boolean> {
-    try {
-      if (!this.page) {
-        return false;
-      }
-      await this.page.waitForLoadState('domcontentloaded', { timeout: 5000 });
-      return true;
-    } catch {
-      return false;
-    }
-  }
+  
 }
 
 // Set the custom world constructor for Cucumber

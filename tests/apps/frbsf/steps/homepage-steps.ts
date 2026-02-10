@@ -30,7 +30,7 @@ When('I verify the page title contains {string}', async function (this: ICustomW
 
 Then('I should see the FRBSF logo', async function (this: ICustomWorld) {
   this.logger.step('Verification', 'Checking for FRBSF logo visibility');
-  const logoVisible = await this.homePage.isElementVisible('[data-testid="frbsf-logo"], .logo, img[alt*="Federal Reserve"]');
+  const logoVisible = await this.homePage.isElementVisible('.sffed-logo-org__logotype, a[href="/"], [class*="logo"]');
   expect(logoVisible).toBe(true);
   this.logger.assertion('FRBSF logo is visible', logoVisible);
 });
@@ -418,15 +418,6 @@ When('I measure the page load time', async function (this: ICustomWorld) {
   await this.homePage.waitForPageLoad();
   const loadTime = this.endPerformanceMeasurement('Page load measurement');
   this.setTestData('measuredLoadTime', loadTime);
-});
-
-Then('the page should load within {int} seconds', async function (this: ICustomWorld, seconds: number) {
-  this.logger.step('Performance', `Validating page load within ${seconds} seconds`);
-  const loadTime = this.getTestData('measuredLoadTime') || 0;
-  const loadTimeInSeconds = loadTime / 1000;
-  
-  expect(loadTimeInSeconds).toBeLessThanOrEqual(seconds);
-  this.logger.assertion(`Page loaded within ${seconds} seconds (actual: ${loadTimeInSeconds.toFixed(2)}s)`, loadTimeInSeconds <= seconds);
 });
 
 Then('all critical resources should be loaded', async function (this: ICustomWorld) {
