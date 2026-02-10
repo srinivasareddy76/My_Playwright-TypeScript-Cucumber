@@ -1,12 +1,51 @@
 
 
-
+/**
+ * @fileoverview HomePage - Page Object Model for the Federal Reserve Bank of San Francisco homepage
+ * 
+ * This class provides comprehensive functionality for interacting with the FRBSF homepage,
+ * including navigation, content validation, search functionality, and responsive design testing.
+ * 
+ * @author Test Automation Team
+ * @version 1.0.0
+ * @since 2026-02-10
+ * 
+ * @example
+ * ```typescript
+ * const homePage = new HomePage();
+ * await homePage.navigateToHomePage();
+ * await homePage.performSearch('monetary policy');
+ * const isLoaded = await homePage.isPageLoaded();
+ * ```
+ */
 
 import { Page } from '@playwright/test';
 import { BasePage } from '../../../pages/base-page';
 
+/**
+ * HomePage class for Federal Reserve Bank of San Francisco website.
+ * 
+ * Provides methods for:
+ * - Navigation and page interactions
+ * - Search functionality
+ * - Content section validation
+ * - Social media link interactions
+ * - Performance and accessibility testing
+ * - Responsive design validation
+ * 
+ * @extends BasePage
+ * @class HomePage
+ */
 export class HomePage extends BasePage {
-  // Page selectors
+  /**
+   * CSS selectors for all homepage elements.
+   * 
+   * Organized by functional areas for better maintainability.
+   * Uses multiple selector strategies for robustness against DOM changes.
+   * 
+   * @private
+   * @readonly
+   */
   private readonly selectors = {
     // Header elements
     logo: 'a[href="/"], a:has(.sffed-logo-org__logotype), a:has([class*="logo"])',
@@ -66,27 +105,111 @@ export class HomePage extends BasePage {
     mainContent: '#main, main, [role="main"]'
   };
 
+  /**
+   * Creates an instance of HomePage.
+   * 
+   * @param {Page} [page] - Optional Playwright Page instance
+   * 
+   * @example
+   * ```typescript
+   * const homePage = new HomePage();
+   * // or with existing page
+   * const homePage = new HomePage(page);
+   * ```
+   */
   constructor(page?: Page) {
     super(page);
   }
 
-  // Navigation methods
+  // ========================================
+  // NAVIGATION METHODS
+  // ========================================
+
+  /**
+   * Navigates to the FRBSF homepage and waits for it to load.
+   * 
+   * Uses the base URL from environment configuration and navigates to the root path.
+   * Includes automatic page load waiting to ensure the page is ready for interactions.
+   * 
+   * @public
+   * @returns {Promise<void>}
+   * 
+   * @example
+   * ```typescript
+   * await homePage.navigateToHomePage();
+   * ```
+   * 
+   * @throws {Error} If navigation fails or page doesn't load within timeout
+   */
   public async navigateToHomePage(): Promise<void> {
     await this.navigateTo('/');
     await this.waitForPageLoad();
   }
 
+  /**
+   * Clicks on the FRBSF logo to navigate to homepage.
+   * 
+   * Useful for testing logo functionality and navigation from other pages.
+   * Uses multiple selector strategies to ensure compatibility with different page layouts.
+   * 
+   * @public
+   * @returns {Promise<void>}
+   * 
+   * @example
+   * ```typescript
+   * await homePage.clickLogo();
+   * ```
+   * 
+   * @throws {Error} If logo is not found or not clickable
+   */
   public async clickLogo(): Promise<void> {
     await this.clickElement(this.selectors.logo);
   }
 
-  // Header interactions
+  // ========================================
+  // SEARCH FUNCTIONALITY
+  // ========================================
+
+  /**
+   * Opens the search dialog/input field.
+   * 
+   * For the FRBSF website, the search input is already visible on the page,
+   * so this method focuses on the search input to prepare for text entry.
+   * 
+   * @public
+   * @returns {Promise<void>}
+   * 
+   * @example
+   * ```typescript
+   * await homePage.openSearchDialog();
+   * ```
+   * 
+   * @throws {Error} If search input is not found or not accessible
+   */
   public async openSearchDialog(): Promise<void> {
     // For FRBSF website, search input is already visible, just focus on it
     await this.waitForElement(this.selectors.searchInput);
     await this.clickElement(this.selectors.searchInput);
   }
 
+  /**
+   * Performs a search with the specified search term.
+   * 
+   * Opens the search dialog, enters the search term, and submits the search
+   * by pressing Enter. This method handles the complete search workflow.
+   * 
+   * @public
+   * @param {string} searchTerm - The term to search for
+   * @returns {Promise<void>}
+   * 
+   * @example
+   * ```typescript
+   * await homePage.performSearch('monetary policy');
+   * await homePage.performSearch('economic indicators');
+   * ```
+   * 
+   * @throws {Error} If search functionality is not available or search fails
+   */
   public async performSearch(searchTerm: string): Promise<void> {
     await this.openSearchDialog();
     await this.typeText(this.selectors.searchInput, searchTerm);

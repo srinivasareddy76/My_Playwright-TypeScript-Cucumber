@@ -3,6 +3,27 @@
 
 
 
+/**
+ * @fileoverview CustomWorld - Cucumber World implementation for test context management
+ * 
+ * This file defines the custom Cucumber World class that provides shared context
+ * and utilities across all test scenarios. It includes browser management,
+ * page object instances, test data storage, and helper methods for test execution.
+ * 
+ * @author Test Automation Team
+ * @version 1.0.0
+ * @since 2026-02-10
+ * 
+ * @example
+ * ```typescript
+ * // In step definitions
+ * Given('I am on the homepage', async function (this: ICustomWorld) {
+ *   await this.homePage.navigateToHomePage();
+ *   this.setScenarioContext('currentPage', 'homepage');
+ * });
+ * ```
+ */
+
 import { World, IWorldOptions, setWorldConstructor } from '@cucumber/cucumber';
 import { Page, Browser, BrowserContext } from '@playwright/test';
 import { BrowserManager } from '../utils/browser-manager';
@@ -11,42 +32,147 @@ import { Logger } from '../utils/logger';
 import { HomePage } from '../../tests/apps/frbsf/pages/home-page';
 import { SearchResultsPage } from '../../tests/apps/frbsf/pages/search-results-page';
 
+/**
+ * Interface defining the custom Cucumber World context.
+ * 
+ * Extends the base Cucumber World with additional properties and methods
+ * needed for browser automation testing. Provides type safety and
+ * IntelliSense support for all test-related functionality.
+ * 
+ * @interface ICustomWorld
+ * @extends World
+ */
 export interface ICustomWorld extends World {
-  // Browser instances
+  // ========================================
+  // BROWSER INSTANCES
+  // ========================================
+  
+  /** Playwright Browser instance for the current test session */
   browser?: Browser | undefined;
+  
+  /** Playwright BrowserContext instance for test isolation */
   context?: BrowserContext | undefined;
+  
+  /** Playwright Page instance for browser interactions */
   page?: Page | undefined;
   
-  // Managers and utilities
+  // ========================================
+  // MANAGERS AND UTILITIES
+  // ========================================
+  
+  /** Browser management singleton for lifecycle operations */
   browserManager: BrowserManager;
+  
+  /** Environment configuration manager */
   environmentManager: EnvironmentManager;
+  
+  /** Logger instance for test execution tracking */
   logger: Logger;
   
-  // Page Object Models
+  // ========================================
+  // PAGE OBJECT MODELS
+  // ========================================
+  
+  /** HomePage page object for FRBSF homepage interactions */
   homePage: HomePage;
+  
+  /** SearchResultsPage page object for search functionality */
   searchResultsPage: SearchResultsPage;
   
-  // Test data and state
+  // ========================================
+  // TEST DATA AND STATE MANAGEMENT
+  // ========================================
+  
+  /** Map for storing test data that persists across steps */
   testData: Map<string, any>;
+  
+  /** Map for storing scenario-specific context data */
   scenarioContext: Map<string, any>;
   
-  // Screenshots and artifacts
+  // ========================================
+  // ARTIFACTS AND DEBUGGING
+  // ========================================
+  
+  /** Array of screenshot file paths captured during test execution */
   screenshots: string[];
+  
+  /** Array of trace file paths for debugging failed tests */
   traces: string[];
   
-  // Test metadata
+  // ========================================
+  // TEST METADATA
+  // ========================================
+  
+  /** Name of the currently executing scenario */
   currentScenario?: string | undefined;
+  
+  /** Name of the currently executing step */
   currentStep?: string | undefined;
+  
+  /** Timestamp when the test started (for performance measurement) */
   testStartTime?: number | undefined;
   
-  // Helper methods
+  // ========================================
+  // HELPER METHODS
+  // ========================================
+  
+  /**
+   * Initializes all page object instances with the current browser context.
+   * Called automatically during world setup to ensure page objects are ready.
+   */
   initializePageObjects(): Promise<void>;
+  
+  /**
+   * Cleans up test data and resets state for the next scenario.
+   * Called automatically in After hooks to prevent data leakage between tests.
+   */
   cleanupTestData(): void;
+  
+  /**
+   * Captures a screenshot of the current page state.
+   * 
+   * @param name - Optional name for the screenshot file
+   * @returns Promise resolving to the screenshot file path
+   */
   captureScreenshot(name?: string): Promise<string>;
+  
+  /**
+   * Starts capturing a trace for debugging purposes.
+   * 
+   * @param name - Optional name for the trace file
+   * @returns Promise resolving to the trace file path
+   */
   captureTrace(name?: string): Promise<string>;
+  
+  /**
+   * Stops trace capture and saves to the specified path.
+   * 
+   * @param path - File path where the trace should be saved
+   */
   stopTrace(path: string): Promise<void>;
+  
+  /**
+   * Stores test data that persists across steps within a scenario.
+   * 
+   * @param key - Unique identifier for the data
+   * @param value - Data value to store
+   */
   setTestData(key: string, value: any): void;
+  
+  /**
+   * Retrieves previously stored test data.
+   * 
+   * @param key - Unique identifier for the data
+   * @returns The stored data value or undefined if not found
+   */
   getTestData(key: string): any;
+  
+  /**
+   * Stores scenario-specific context data.
+   * 
+   * @param key - Unique identifier for the context data
+   * @param value - Context value to store
+   */
   setScenarioContext(key: string, value: any): void;
   getScenarioContext(key: string): any;
   

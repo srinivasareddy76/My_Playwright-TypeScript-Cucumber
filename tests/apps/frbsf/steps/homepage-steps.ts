@@ -1,24 +1,157 @@
 
 
-
-
+/**
+ * @fileoverview Homepage Step Definitions - Cucumber step implementations for FRBSF homepage testing
+ * 
+ * This file contains all step definitions for testing the Federal Reserve Bank of San Francisco
+ * homepage functionality. Steps are organized by functionality areas including navigation,
+ * content validation, search, performance, and accessibility testing.
+ * 
+ * @author Test Automation Team
+ * @version 1.0.0
+ * @since 2026-02-10
+ * 
+ * @example
+ * ```gherkin
+ * Given I am on the FRBSF homepage
+ * When I verify the page title contains "Federal Reserve"
+ * Then I should see the FRBSF logo
+ * ```
+ */
 
 import { Given, When, Then } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
 import { ICustomWorld } from '@common/world';
 
+// ========================================
+// NAVIGATION STEP DEFINITIONS
+// ========================================
+
+/**
+ * Step: Navigate to the FRBSF homepage
+ * 
+ * Navigates to the Federal Reserve Bank of San Francisco homepage and sets
+ * the scenario context to track the current page for subsequent steps.
+ * 
+ * @param {ICustomWorld} this - Cucumber world context with page objects and utilities
+ * 
+ * @example
+ * ```gherkin
+ * Given I am on the FRBSF homepage
+ * ```
+ */
 Given('I am on the FRBSF homepage', async function (this: ICustomWorld) {
   this.logger.step('Navigation', 'Navigating to FRBSF homepage');
   await this.homePage.navigateToHomePage();
   this.setScenarioContext('currentPage', 'homepage');
 });
 
+/**
+ * Step: Verify page has loaded completely
+ * 
+ * Waits for the page to fully load and validates that all essential elements
+ * are present. Uses the page object's isPageLoaded() method for validation.
+ * 
+ * @param {ICustomWorld} this - Cucumber world context with page objects and utilities
+ * 
+ * @example
+ * ```gherkin
+ * Given the page has loaded completely
+ * And the page has loaded completely
+ * ```
+ */
 Given('the page has loaded completely', async function (this: ICustomWorld) {
   this.logger.step('Page Load', 'Waiting for page to load completely');
   await this.homePage.waitForPageLoad();
   const isLoaded = await this.homePage.isPageLoaded();
   expect(isLoaded).toBe(true);
   this.logger.assertion('Page loaded completely', isLoaded);
+});
+
+// ========================================
+// CONTENT VALIDATION STEP DEFINITIONS
+// ========================================
+
+/**
+ * Step: Verify page title contains specific text
+ * 
+ * Validates that the page title contains the expected text (case-insensitive).
+ * Useful for verifying correct page loading and SEO compliance.
+ * 
+ * @param {ICustomWorld} this - Cucumber world context with page objects and utilities
+ * @param {string} expectedText - The text that should be present in the page title
+ * 
+ * @example
+ * ```gherkin
+ * When I verify the page title contains "Federal Reserve"
+ * When I verify the page title contains "San Francisco"
+ * ```
+ */
+When('I verify the page title contains {string}', async function (this: ICustomWorld, expectedText: string) {
+  this.logger.step('Verification', `Verifying page title contains: ${expectedText}`);
+  const pageTitle = await this.homePage.getPageTitle();
+  expect(pageTitle.toLowerCase()).toContain(expectedText.toLowerCase());
+  this.logger.assertion(`Page title contains "${expectedText}"`, true);
+});
+
+/**
+ * Step: Verify FRBSF logo is visible
+ * 
+ * Checks that the Federal Reserve Bank of San Francisco logo is visible on the page.
+ * Uses multiple selector strategies to ensure robust element detection.
+ * 
+ * @param {ICustomWorld} this - Cucumber world context with page objects and utilities
+ * 
+ * @example
+ * ```gherkin
+ * Then I should see the FRBSF logo
+ * ```
+ */
+Then('I should see the FRBSF logo', async function (this: ICustomWorld) {
+  this.logger.step('Verification', 'Checking for FRBSF logo visibility');
+  const logoVisible = await this.homePage.isElementVisible('.sffed-logo-org__logotype, a[href="/"], [class*="logo"]');
+  expect(logoVisible).toBe(true);
+  this.logger.assertion('FRBSF logo is visible', logoVisible);
+});
+
+/**
+ * Step: Verify main navigation menu is present
+ * 
+ * Validates that the main navigation menu is visible and functional.
+ * Checks for key navigation elements including About, Research, and other menu items.
+ * 
+ * @param {ICustomWorld} this - Cucumber world context with page objects and utilities
+ * 
+ * @example
+ * ```gherkin
+ * Then I should see the main navigation menu
+ * ```
+ */
+Then('I should see the main navigation menu', async function (this: ICustomWorld) {
+  this.logger.step('Verification', 'Checking for main navigation menu');
+  const navigationValid = await this.homePage.validateMainNavigationMenu();
+  expect(navigationValid).toBe(true);
+  this.logger.assertion('Main navigation menu is visible and functional', navigationValid);
+});
+
+/**
+ * Step: Verify hero section is present
+ * 
+ * Validates that the hero section (main banner/header area) is visible on the homepage.
+ * The hero section typically contains key messaging and navigation elements.
+ * 
+ * @param {ICustomWorld} this - Cucumber world context with page objects and utilities
+ * 
+ * @example
+ * ```gherkin
+ * Then I should see the hero section
+ * ```
+ */
+Then('I should see the hero section', async function (this: ICustomWorld) {
+  this.logger.step('Verification', 'Checking for hero section');
+  const heroValid = await this.homePage.validateHeroSection();
+  expect(heroValid).toBe(true);
+  this.logger.assertion('Hero section is visible', heroValid);
 });
 
 When('I verify the page title contains {string}', async function (this: ICustomWorld, expectedText: string) {

@@ -1,18 +1,82 @@
 
 
+/**
+ * @fileoverview BasePage - Abstract base class for all page objects in the test framework
+ * 
+ * This class provides a comprehensive set of common functionality for page object models,
+ * including navigation, element interaction, assertions, and utility methods.
+ * All page objects should extend this class to inherit standard behaviors.
+ * 
+ * @author Test Automation Team
+ * @version 1.0.0
+ * @since 2026-02-10
+ * 
+ * @example
+ * ```typescript
+ * export class HomePage extends BasePage {
+ *   constructor(page?: Page) {
+ *     super(page);
+ *   }
+ * 
+ *   public async isPageLoaded(): Promise<boolean> {
+ *     return await this.isElementVisible('.homepage-header');
+ *   }
+ * }
+ * ```
+ */
 
 import { Page, Locator, expect } from '@playwright/test';
 import { BrowserManager } from '../../src/utils/browser-manager';
 import { EnvironmentManager } from '../../src/config/environment';
 import { Logger } from '../../src/utils/logger';
 
+/**
+ * Abstract base class for all page objects in the test framework.
+ * 
+ * Provides common functionality including:
+ * - Navigation and page management
+ * - Element interaction (click, type, hover, etc.)
+ * - Wait strategies and timeouts
+ * - Assertions and validations
+ * - Screenshot and performance utilities
+ * - Mobile/responsive testing support
+ * 
+ * @abstract
+ * @class BasePage
+ */
 export abstract class BasePage {
+  /** The Playwright Page instance for browser interactions */
   protected page?: Page;
+  
+  /** Browser management singleton for page lifecycle */
   protected browserManager: BrowserManager;
+  
+  /** Environment configuration manager */
   protected environmentManager: EnvironmentManager;
+  
+  /** Logging utility for test actions and debugging */
   protected logger: Logger;
+  
+  /** Base URL for the application under test */
   protected baseUrl: string;
 
+  /**
+   * Creates an instance of BasePage.
+   * 
+   * Initializes all required managers and utilities, sets up the base URL
+   * from environment configuration, and optionally accepts a Page instance.
+   * 
+   * @param {Page} [page] - Optional Playwright Page instance
+   * 
+   * @example
+   * ```typescript
+   * // Create page object without existing page
+   * const homePage = new HomePage();
+   * 
+   * // Create page object with existing page
+   * const homePage = new HomePage(page);
+   * ```
+   */
   constructor(page?: Page) {
     this.browserManager = BrowserManager.getInstance();
     this.environmentManager = EnvironmentManager.getInstance();
@@ -24,6 +88,22 @@ export abstract class BasePage {
     }
   }
 
+  /**
+   * Gets the current Page instance, creating one if it doesn't exist.
+   * 
+   * This method ensures that a valid Page instance is always available
+   * for browser interactions. If no page is set, it retrieves the current
+   * page from the BrowserManager.
+   * 
+   * @protected
+   * @returns {Promise<Page>} The current Playwright Page instance
+   * 
+   * @example
+   * ```typescript
+   * const page = await this.getPage();
+   * await page.goto('https://example.com');
+   * ```
+   */
   protected async getPage(): Promise<Page> {
     if (!this.page) {
       this.page = await this.browserManager.getCurrentPage();
@@ -31,7 +111,32 @@ export abstract class BasePage {
     return this.page;
   }
 
-  // Navigation methods
+  // ========================================
+  // NAVIGATION METHODS
+  // ========================================
+
+  /**
+   * Navigates to a specified URL with proper error handling and logging.
+   * 
+   * Supports both absolute URLs (starting with http/https) and relative URLs
+   * (which will be appended to the base URL). Includes automatic page load
+   * waiting and timeout handling.
+   * 
+   * @public
+   * @param {string} url - The URL to navigate to (absolute or relative)
+   * @returns {Promise<void>}
+   * 
+   * @example
+   * ```typescript
+   * // Navigate to absolute URL
+   * await this.navigateTo('https://example.com/page');
+   * 
+   * // Navigate to relative URL
+   * await this.navigateTo('/about');
+   * ```
+   * 
+   * @throws {Error} If navigation fails or times out
+   */
   public async navigateTo(url: string): Promise<void> {
     const fullUrl = url.startsWith('http') ? url : `${this.baseUrl}${url}`;
     this.logger.pageAction(this.constructor.name, `Navigating to: ${fullUrl}`);
@@ -45,6 +150,22 @@ export abstract class BasePage {
     await this.waitForPageLoad();
   }
 
+  /**
+   * Waits for the page to fully load with multiple load state checks.
+   * 
+   * Uses a combination of 'domcontentloaded' and 'networkidle' states
+   * to ensure the page is fully loaded. Includes timeout handling to
+   * prevent indefinite waiting.
+   * 
+   * @public
+   * @returns {Promise<void>}
+   * 
+   * @example
+   * ```typescript
+   * await page.goto('https://example.com');
+   * await this.waitForPageLoad();
+   * ```
+   */
   public async waitForPageLoad(): Promise<void> {
     const page = await this.getPage();
     try {
@@ -75,7 +196,27 @@ export abstract class BasePage {
     return title;
   }
 
-  // Element interaction methods
+  // ========================================
+  // ELEMENT INTERACTION METHODS
+  // ========================================
+
+  /**
+   * Finds a single element using a CSS selector with optional timeout.
+   * 
+   * Returns a Playwright Locator that can be used for further interactions.
+   * Optionally waits for the element to appear within the specified timeout.
+   * 
+   * @protected
+   * @param {string} selector - CSS selector to locate the element
+   * @param {number} [timeout] - Optional timeout in milliseconds
+   * @returns {Promise<Locator>} Playwright Locator for the element
+   * 
+   * @example
+   * ```typescript
+   * const button = await this.findElement('.submit-button');
+   * const input = await this.findElement('#email-input', 5000);
+   * ```
+   */
   protected async findElement(selector: string, timeout?: number): Promise<Locator> {
     const page = await this.getPage();
     const element = page.locator(selector);
@@ -87,11 +228,55 @@ export abstract class BasePage {
     return element;
   }
 
+  /**
+   * Finds multiple elements using a CSS selector.
+   * 
+   * Returns a Playwright Locator that represents all matching elements.
+   * Use .count() to get the number of elements or .nth(index) to access specific elements.
+   * 
+   * @protected
+   * @param {string} selector - CSS selector to locate elements
+   * @returns {Promise<Locator>} Playwright Locator for all matching elements
+   * 
+   * @example
+   * ```typescript
+   * const buttons = await this.findElements('.menu-button');
+   * const count = await buttons.count();
+   * const firstButton = buttons.nth(0);
+   * ```
+   */
   protected async findElements(selector: string): Promise<Locator> {
     const page = await this.getPage();
     return page.locator(selector);
   }
 
+  /**
+   * Clicks on an element with comprehensive error handling and options.
+   * 
+   * Waits for the element to be visible before clicking. Supports force clicking
+   * for elements that might be obscured. Includes automatic logging of actions.
+   * 
+   * @protected
+   * @param {string} selector - CSS selector for the element to click
+   * @param {Object} [options] - Click options
+   * @param {number} [options.timeout] - Timeout for finding the element
+   * @param {boolean} [options.force] - Force click even if element is not actionable
+   * @returns {Promise<void>}
+   * 
+   * @example
+   * ```typescript
+   * // Standard click
+   * await this.clickElement('.submit-button');
+   * 
+   * // Click with timeout
+   * await this.clickElement('.dynamic-button', { timeout: 10000 });
+   * 
+   * // Force click (bypass actionability checks)
+   * await this.clickElement('.overlay-button', { force: true });
+   * ```
+   * 
+   * @throws {Error} If element is not found or not clickable within timeout
+   */
   protected async clickElement(selector: string, options?: { timeout?: number; force?: boolean }): Promise<void> {
     this.logger.pageAction(this.constructor.name, `Clicking element: ${selector}`);
     const element = await this.findElement(selector, options?.timeout);
@@ -104,6 +289,23 @@ export abstract class BasePage {
     await element.click(clickOptions);
   }
 
+  /**
+   * Double-clicks on an element.
+   * 
+   * Waits for the element to be visible before performing the double-click action.
+   * Useful for actions that require double-click interactions like opening files.
+   * 
+   * @protected
+   * @param {string} selector - CSS selector for the element to double-click
+   * @returns {Promise<void>}
+   * 
+   * @example
+   * ```typescript
+   * await this.doubleClickElement('.file-item');
+   * ```
+   * 
+   * @throws {Error} If element is not found or not actionable
+   */
   protected async doubleClickElement(selector: string): Promise<void> {
     this.logger.pageAction(this.constructor.name, `Double clicking element: ${selector}`);
     const element = await this.findElement(selector);
@@ -111,6 +313,27 @@ export abstract class BasePage {
     await element.dblclick();
   }
 
+  /**
+   * Hovers over an element to trigger hover states or tooltips.
+   * 
+   * Waits for the element to be visible before hovering. Useful for dropdown
+   * menus, tooltips, or any hover-triggered interactions.
+   * 
+   * @protected
+   * @param {string} selector - CSS selector for the element to hover over
+   * @returns {Promise<void>}
+   * 
+   * @example
+   * ```typescript
+   * // Hover to show dropdown menu
+   * await this.hoverElement('.menu-item');
+   * 
+   * // Hover to show tooltip
+   * await this.hoverElement('.info-icon');
+   * ```
+   * 
+   * @throws {Error} If element is not found or not visible
+   */
   protected async hoverElement(selector: string): Promise<void> {
     this.logger.pageAction(this.constructor.name, `Hovering over element: ${selector}`);
     const element = await this.findElement(selector);
@@ -118,6 +341,34 @@ export abstract class BasePage {
     await element.hover();
   }
 
+  /**
+   * Types text into an input element with advanced options.
+   * 
+   * Supports clearing existing text before typing and custom typing delays.
+   * Waits for the element to be visible and uses fill() for reliable text input.
+   * 
+   * @protected
+   * @param {string} selector - CSS selector for the input element
+   * @param {string} text - Text to type into the element
+   * @param {Object} [options] - Typing options
+   * @param {boolean} [options.clear] - Clear existing text before typing
+   * @param {number} [options.delay] - Delay between keystrokes in milliseconds
+   * @returns {Promise<void>}
+   * 
+   * @example
+   * ```typescript
+   * // Type text (replaces existing content)
+   * await this.typeText('#email', 'user@example.com');
+   * 
+   * // Clear field first, then type
+   * await this.typeText('#search', 'new query', { clear: true });
+   * 
+   * // Type with delay (for slow systems)
+   * await this.typeText('#password', 'secret', { delay: 100 });
+   * ```
+   * 
+   * @throws {Error} If element is not found or not editable
+   */
   protected async typeText(selector: string, text: string, options?: { clear?: boolean; delay?: number }): Promise<void> {
     this.logger.pageAction(this.constructor.name, `Typing text into element: ${selector}`);
     const element = await this.findElement(selector);
@@ -321,7 +572,38 @@ export abstract class BasePage {
     await page.setViewportSize({ width, height });
   }
 
-  // Abstract methods that must be implemented by subclasses
+  // ========================================
+  // ABSTRACT METHODS
+  // ========================================
+
+  /**
+   * Abstract method to check if the page has loaded successfully.
+   * 
+   * This method must be implemented by all subclasses to provide page-specific
+   * loading validation. Typically checks for the presence of key elements
+   * that indicate the page has loaded correctly.
+   * 
+   * @abstract
+   * @public
+   * @returns {Promise<boolean>} True if the page is loaded, false otherwise
+   * 
+   * @example
+   * ```typescript
+   * // Implementation in HomePage class
+   * public async isPageLoaded(): Promise<boolean> {
+   *   return await this.isElementVisible('.homepage-header') &&
+   *          await this.isElementVisible('.main-navigation');
+   * }
+   * 
+   * // Implementation in SearchPage class
+   * public async isPageLoaded(): Promise<boolean> {
+   *   return await this.isElementVisible('.search-results') ||
+   *          await this.isElementVisible('.no-results-message');
+   * }
+   * ```
+   * 
+   * @throws {Error} Should be implemented by subclass
+   */
   public abstract isPageLoaded(): Promise<boolean>;
 }
 

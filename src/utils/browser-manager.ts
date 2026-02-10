@@ -1,23 +1,91 @@
 
 
 
+/**
+ * @fileoverview BrowserManager - Singleton class for managing Playwright browser instances
+ * 
+ * This class provides centralized browser management functionality including browser launching,
+ * context creation, page management, and cleanup operations. It supports multiple browsers
+ * (Chromium, Firefox, WebKit) with configurable options for different testing scenarios.
+ * 
+ * @author Test Automation Team
+ * @version 1.0.0
+ * @since 2026-02-10
+ * 
+ * @example
+ * ```typescript
+ * const browserManager = BrowserManager.getInstance();
+ * await browserManager.launchBrowser();
+ * const page = await browserManager.createPage();
+ * await browserManager.closeBrowser();
+ * ```
+ */
+
 import { Browser, BrowserContext, Page, chromium, firefox, webkit, BrowserType } from '@playwright/test';
 import { EnvironmentManager } from '../config/environment';
 import { Logger } from './logger';
 
+/**
+ * BrowserManager class for managing Playwright browser instances.
+ * 
+ * Implements the Singleton pattern to ensure only one browser instance
+ * is active at a time. Provides methods for:
+ * - Browser launching with configurable options
+ * - Browser context creation and management
+ * - Page creation and lifecycle management
+ * - Screenshot and video recording capabilities
+ * - Proper cleanup and resource management
+ * 
+ * @class BrowserManager
+ * @singleton
+ */
 export class BrowserManager {
+  /** Singleton instance of BrowserManager */
   private static instance: BrowserManager;
+  
+  /** Current browser instance */
   private browser: Browser | null = null;
+  
+  /** Current browser context instance */
   private context: BrowserContext | null = null;
+  
+  /** Current page instance */
   private page: Page | null = null;
+  
+  /** Environment configuration manager */
   private environmentManager: EnvironmentManager;
+  
+  /** Logger instance for debugging and monitoring */
   private logger: Logger;
 
+  /**
+   * Private constructor to enforce singleton pattern.
+   * 
+   * Initializes environment manager and logger instances.
+   * Cannot be called directly - use getInstance() instead.
+   * 
+   * @private
+   */
   private constructor() {
     this.environmentManager = EnvironmentManager.getInstance();
     this.logger = Logger.getInstance();
   }
 
+  /**
+   * Gets the singleton instance of BrowserManager.
+   * 
+   * Creates a new instance if one doesn't exist, otherwise returns
+   * the existing instance. This ensures only one browser manager
+   * is active throughout the test execution.
+   * 
+   * @static
+   * @returns {BrowserManager} The singleton BrowserManager instance
+   * 
+   * @example
+   * ```typescript
+   * const browserManager = BrowserManager.getInstance();
+   * ```
+   */
   public static getInstance(): BrowserManager {
     if (!BrowserManager.instance) {
       BrowserManager.instance = new BrowserManager();
