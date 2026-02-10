@@ -154,6 +154,18 @@ export class HomePage extends BasePage {
     return await this.isElementVisible(this.selectors.districtMap);
   }
 
+  public async isResearchInsightsSectionVisible(): Promise<boolean> {
+    return await this.isElementVisible(this.selectors.researchInsightsSection);
+  }
+
+  public async isNewsMediaSectionVisible(): Promise<boolean> {
+    return await this.isElementVisible(this.selectors.newsMediaSection);
+  }
+
+  public async isEconomicDataSectionVisible(): Promise<boolean> {
+    return await this.isElementVisible(this.selectors.economicDataSection);
+  }
+
   // Social media interactions
   public async clickLinkedInLink(): Promise<void> {
     await this.clickElement(this.selectors.linkedinLink);

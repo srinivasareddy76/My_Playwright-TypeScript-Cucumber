@@ -173,21 +173,21 @@ Then('the logo should be clickable and link to the homepage', async function (th
 
 Then('I should see the Research & Insights section', async function (this: ICustomWorld) {
   this.logger.step('Verification', 'Checking for Research & Insights section');
-  const sectionVisible = await this.homePage.isElementVisible('[data-testid="research-insights"], .research-section, section:has-text("Research")');
+  const sectionVisible = await this.homePage.isResearchInsightsSectionVisible();
   expect(sectionVisible).toBe(true);
   this.logger.assertion('Research & Insights section is visible', sectionVisible);
 });
 
 Then('I should see the News & Media section', async function (this: ICustomWorld) {
   this.logger.step('Verification', 'Checking for News & Media section');
-  const sectionVisible = await this.homePage.isElementVisible('[data-testid="news-media"], .news-section, section:has-text("News")');
+  const sectionVisible = await this.homePage.isNewsMediaSectionVisible();
   expect(sectionVisible).toBe(true);
   this.logger.assertion('News & Media section is visible', sectionVisible);
 });
 
 Then('I should see the Economic Data section', async function (this: ICustomWorld) {
   this.logger.step('Verification', 'Checking for Economic Data section');
-  const sectionVisible = await this.homePage.isElementVisible('[data-testid="economic-data"], .data-section, section:has-text("Data")');
+  const sectionVisible = await this.homePage.isEconomicDataSectionVisible();
   expect(sectionVisible).toBe(true);
   this.logger.assertion('Economic Data section is visible', sectionVisible);
 });
@@ -206,7 +206,7 @@ Then('I should see district-specific information', async function (this: ICustom
 
 Then('I should see the interactive district map', async function (this: ICustomWorld) {
   this.logger.step('Verification', 'Checking for interactive district map');
-  const mapVisible = await this.homePage.isElementVisible('[data-testid="district-map"], .district-map, .interactive-map');
+  const mapVisible = await this.homePage.isDistrictMapVisible();
   expect(mapVisible).toBe(true);
   this.logger.assertion('Interactive district map is visible', mapVisible);
 });
