@@ -182,10 +182,20 @@ export class BrowserManager {
 
   public async closeContext(): Promise<void> {
     if (this.context) {
-      this.logger.info('Closing browser context');
-      await this.context.close();
-      this.context = null;
-      this.page = null;
+      try {
+        this.logger.info('Closing browser context');
+        // Try to close the context, but handle if it's already closed
+        await Promise.race([
+          this.context.close(),
+          new Promise(resolve => setTimeout(resolve, 1000)) // 1 second timeout
+        ]);
+      } catch (error) {
+        // Context might already be closed, log but don't throw
+        this.logger.info('Context already closed or error during close - this is expected for some tests');
+      } finally {
+        this.context = null;
+        this.page = null;
+      }
     }
   }
 
