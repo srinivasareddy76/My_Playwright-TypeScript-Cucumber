@@ -6,6 +6,8 @@
   "scripts": {
     "test": "cucumber-js",
     "test:headed": "cross-env HEADED=true cucumber-js --profile headed",
+    "test:headed:windows": "cross-env HEADED=true cucumber-js --profile headed",
+    "test:headed:linux": "xvfb-run cross-env HEADED=true cucumber-js --profile headed",
     "test:headless": "cucumber-js --profile headless",
     "test:smoke:t3": "cross-env ENV=t3 cucumber-js --tags '@smoke'",
     "test:smoke:t5": "cross-env ENV=t5 cucumber-js --tags '@smoke'",

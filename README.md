@@ -363,6 +363,30 @@ npm run test:headed
 npm run test:headless
 ```
 
+### 🪟 **Windows Users - Headed Mode**
+
+For Windows users who want to see the browser window during testing:
+
+```bash
+# Windows - headed mode (visible browser)
+npm run test:headed:windows -- --tags "@basic"
+
+# Windows - headless mode (recommended for CI/CD)
+npm run test:headless -- --tags "@basic"
+```
+
+### 🐧 **Linux/Mac Users - Headed Mode**
+
+For Linux/Mac users in headless environments (servers, containers):
+
+```bash
+# Linux/Mac - headed mode with virtual display
+npm run test:headed:linux -- --tags "@basic"
+
+# Or use xvfb-run directly
+xvfb-run npm run test:headed -- --tags "@basic"
+```
+
 ### Headless vs Headed Testing
 
 #### Headless Mode (Default)

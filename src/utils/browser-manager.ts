@@ -39,17 +39,32 @@ export class BrowserManager {
     });
 
     try {
+      // Platform-specific browser arguments
+      const isWindows = process.platform === 'win32';
+      const baseArgs = [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-web-security',
+        '--allow-running-insecure-content',
+        '--disable-features=VizDisplayCompositor'
+      ];
+
+      // Add Windows-specific args for better headed mode support
+      if (isWindows && !browserConfig.headless) {
+        baseArgs.push(
+          '--disable-gpu-sandbox',
+          '--disable-software-rasterizer',
+          '--disable-background-timer-throttling',
+          '--disable-backgrounding-occluded-windows',
+          '--disable-renderer-backgrounding'
+        );
+      }
+
       this.browser = await browserType.launch({
         headless: browserConfig.headless,
         slowMo: browserConfig.slowMo,
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage',
-          '--disable-web-security',
-          '--allow-running-insecure-content',
-          '--disable-features=VizDisplayCompositor'
-        ]
+        args: baseArgs
       });
 
       this.logger.info('Browser launched successfully');
