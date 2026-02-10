@@ -165,8 +165,7 @@ Then('I should see Federal Reserve branding elements', async function (this: ICu
 
 Then('the logo should be clickable and link to the homepage', async function (this: ICustomWorld) {
   this.logger.step('Verification', 'Checking logo clickability and homepage link');
-  const logoSelector = '[data-testid="frbsf-logo"], .logo, img[alt*="Federal Reserve"]';
-  const logoClickable = await this.homePage.isElementEnabled(logoSelector);
+  const logoClickable = await this.homePage.isLogoClickable();
   expect(logoClickable).toBe(true);
   this.logger.assertion('Logo is clickable', logoClickable);
 });

@@ -9,7 +9,7 @@ export class HomePage extends BasePage {
   // Page selectors
   private readonly selectors = {
     // Header elements
-    logo: '.sffed-logo-org__logotype, a[href="/"], [class*="logo"]',
+    logo: 'a[href="/"], a:has(.sffed-logo-org__logotype), a:has([class*="logo"])',
     mainNavigation: '.main-nav, nav, header nav',
     searchButton: '#sffed-search-input, input[name="s"][type="search"]',
     searchInput: '#sffed-search-input, input[name="s"][type="search"]',
@@ -164,6 +164,10 @@ export class HomePage extends BasePage {
 
   public async isEconomicDataSectionVisible(): Promise<boolean> {
     return await this.isElementVisible(this.selectors.economicDataSection);
+  }
+
+  public async isLogoClickable(): Promise<boolean> {
+    return await this.isElementEnabled(this.selectors.logo);
   }
 
   // Social media interactions
