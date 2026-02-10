@@ -296,15 +296,7 @@ Then('it should open in a new tab or window', async function (this: ICustomWorld
   this.logger.assertion('Link opened in new tab/window or same page', true);
 });
 
-Given('I am using a mobile viewport', async function (this: ICustomWorld) {
-  this.logger.step('Setup', 'Setting mobile viewport');
-  await this.setMobileViewport();
-});
 
-Given('I am using a tablet viewport', async function (this: ICustomWorld) {
-  this.logger.step('Setup', 'Setting tablet viewport');
-  await this.setTabletViewport();
-});
 
 When('I reload the page', async function (this: ICustomWorld) {
   this.logger.step('Interaction', 'Reloading the page');
