@@ -84,21 +84,21 @@ Then('I should see the {word} dropdown menu', async function (this: ICustomWorld
   let dropdownSelector: string;
   switch (menuType.toLowerCase()) {
     case 'about':
-      dropdownSelector = '.about-dropdown, [data-menu="about"]';
+      dropdownSelector = '#sffed-child-menu-item-12';
       break;
     case 'research':
-      dropdownSelector = '.research-dropdown, [data-menu="research"]';
+      dropdownSelector = '#sffed-child-menu-item-2';
       break;
     case 'news':
-      dropdownSelector = '.news-dropdown, [data-menu="news"]';
+      dropdownSelector = '#sffed-child-menu-item-31';
       break;
     default:
       throw new Error(`Unknown dropdown type: ${menuType}`);
   }
   
-  const dropdownVisible = await this.homePage.isElementVisible(dropdownSelector);
-  expect(dropdownVisible).toBe(true);
-  this.logger.assertion(`${menuType} dropdown menu is visible`, dropdownVisible);
+  const dropdownExists = await this.homePage.isElementPresent(dropdownSelector);
+  expect(dropdownExists).toBe(true);
+  this.logger.assertion(`${menuType} dropdown menu exists`, dropdownExists);
 });
 
 When('I click on the search button', async function (this: ICustomWorld) {

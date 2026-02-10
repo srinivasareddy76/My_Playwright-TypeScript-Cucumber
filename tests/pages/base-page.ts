@@ -259,6 +259,17 @@ export abstract class BasePage {
     }
   }
 
+  protected async isElementPresent(selector: string): Promise<boolean> {
+    try {
+      const count = await this.getElementCount(selector);
+      const isPresent = count > 0;
+      this.logger.pageAction(this.constructor.name, `Element ${selector} present: ${isPresent} (count: ${count})`);
+      return isPresent;
+    } catch {
+      return false;
+    }
+  }
+
   protected async getElementCount(selector: string): Promise<number> {
     const elements = await this.findElements(selector);
     const count = await elements.count();
