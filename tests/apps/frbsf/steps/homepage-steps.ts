@@ -450,62 +450,57 @@ Then('I should see information about the 12th Federal Reserve District', async f
 
 Then('I should see the states covered by the district', async function (this: ICustomWorld) {
   this.logger.step('Verification', 'Checking for district states information');
-  const statesVisible = await this.homePage.isElementVisible('.district-states, .coverage-area');
+  const statesVisible = await this.homePage.isDistrictStatesVisible();
   expect(statesVisible).toBe(true);
   this.logger.assertion('District states information is visible', statesVisible);
 });
 
 Then('I should see district contact information', async function (this: ICustomWorld) {
   this.logger.step('Verification', 'Checking for district contact information');
-  const contactVisible = await this.homePage.isElementVisible('[data-testid="contact-info"], .contact, footer .contact');
+  const contactVisible = await this.homePage.isContactInfoVisible();
   expect(contactVisible).toBe(true);
   this.logger.assertion('District contact information is visible', contactVisible);
 });
 
 Then('I should see the district map', async function (this: ICustomWorld) {
   this.logger.step('Verification', 'Checking for district map');
-  const mapVisible = await this.homePage.isElementVisible('[data-testid="district-map"], .district-map, .interactive-map');
+  const mapVisible = await this.homePage.isDistrictMapVisible();
   expect(mapVisible).toBe(true);
   this.logger.assertion('District map is visible', mapVisible);
 });
 
 Then('the map should be interactive', async function (this: ICustomWorld) {
   this.logger.step('Verification', 'Checking map interactivity');
-  const mapVisible = await this.homePage.isElementVisible('[data-testid="district-map"], .district-map, .interactive-map');
+  const mapVisible = await this.homePage.isDistrictMapVisible();
   expect(mapVisible).toBe(true);
   this.logger.assertion('District map is interactive', mapVisible);
 });
 
 When('I look for quick access links', async function (this: ICustomWorld) {
   this.logger.step('Search', 'Looking for quick access links');
-  await this.homePage.scrollToElement('[data-testid="quick-links"], .quick-links, .shortcuts');
+  await this.homePage.scrollToQuickLinksSection();
 });
 
 Then('I should see links to popular sections', async function (this: ICustomWorld) {
   this.logger.step('Verification', 'Checking for popular section links');
-  const quickLinksVisible = await this.homePage.isElementVisible('[data-testid="quick-links"], .quick-links, .shortcuts');
+  const quickLinksVisible = await this.homePage.isQuickLinksVisible();
   expect(quickLinksVisible).toBe(true);
   this.logger.assertion('Quick access links to popular sections are visible', quickLinksVisible);
 });
 
 Then('I should see shortcuts to key resources', async function (this: ICustomWorld) {
   this.logger.step('Verification', 'Checking for key resource shortcuts');
-  const shortcutsVisible = await this.homePage.isElementVisible('[data-testid="quick-links"], .quick-links, .shortcuts');
+  const shortcutsVisible = await this.homePage.isQuickLinksVisible();
   expect(shortcutsVisible).toBe(true);
   this.logger.assertion('Shortcuts to key resources are visible', shortcutsVisible);
 });
 
 When('I click on a quick link', async function (this: ICustomWorld) {
   this.logger.step('Interaction', 'Clicking on a quick link');
-  const quickLinkSelector = '[data-testid="quick-links"] a, .quick-links a, .shortcuts a';
-  const quickLinkExists = await this.homePage.isElementVisible(quickLinkSelector);
-  
-  if (quickLinkExists) {
-    await this.homePage.clickElement(quickLinkSelector);
-  } else {
-    // If no quick links exist, we'll click on a main navigation item instead
-    await this.homePage.clickResearchMenu();
-  }
+  // Use navigation links as quick links - click on "About Us" link
+  await this.homePage.clickElement('nav a:has-text("About Us")');
+  // Update context to indicate we're on the about page
+  this.setScenarioContext('currentPage', 'about');
 });
 
 Then('I should be taken to the appropriate page', async function (this: ICustomWorld) {

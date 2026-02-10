@@ -32,10 +32,10 @@ export class HomePage extends BasePage {
     newsDropdown: '.news-dropdown, [data-menu="news"]',
     
     // Key sections
-    researchInsightsSection: 'h2:has-text("Research"), h3:has-text("Research"), [class*="research"], main',
-    newsMediaSection: 'h2:has-text("News"), h3:has-text("News"), [class*="news"], main',
-    economicDataSection: 'h2:has-text("Data"), h3:has-text("Data"), [class*="data"], main',
-    districtInfoSection: 'h2:has-text("District"), h3:has-text("District"), [class*="district"], main',
+    researchInsightsSection: 'h2:has-text("What We Study"), h3:has-text("Monetary Policy"), h3:has-text("Labor Markets")',
+    newsMediaSection: 'h2:has-text("News & Media"), h2:has-text("The Latest")',
+    economicDataSection: 'h3:has-text("Financial Markets"), h3:has-text("Banking")',
+    districtInfoSection: 'h3:has-text("Explore the 12th District")',
     
     // Featured content
     featuredArticles: '[data-testid="featured-articles"], .featured-content, .highlight-articles',
@@ -45,7 +45,7 @@ export class HomePage extends BasePage {
     // Footer elements
     footer: 'footer, .footer, .site-footer',
     footerLinks: 'footer a, .footer a',
-    contactInfo: '[data-testid="contact-info"], .contact, footer .contact',
+    contactInfo: 'a:has-text("Contact Us"), a[href*="contact"]',
     socialMediaLinks: '[data-testid="social-links"], .social-media, .social-links',
     
     // Social media specific links
@@ -55,11 +55,11 @@ export class HomePage extends BasePage {
     youtubeLink: 'a[href*="youtube"], a[aria-label*="YouTube"]',
     
     // District map and information
-    districtMap: '[data-testid="district-map"], .district-map, .interactive-map',
-    districtStates: '.district-states, .coverage-area',
+    districtMap: 'a:has-text("Our District"), a[href*="district"]',
+    districtStates: 'a:has-text("Explore Our Region"), a:has-text("Our District")',
     
-    // Quick links
-    quickLinks: '[data-testid="quick-links"], .quick-links, .shortcuts',
+    // Quick links (using navigation menu as quick access)
+    quickLinks: '.main-nav',
     
     // Accessibility elements
     skipToContent: 'a[href="#main"], .skip-link',
@@ -132,6 +132,26 @@ export class HomePage extends BasePage {
 
   public async scrollToDistrictSection(): Promise<void> {
     await this.scrollToElement(this.selectors.districtInfoSection);
+  }
+
+  public async scrollToQuickLinksSection(): Promise<void> {
+    await this.scrollToElement(this.selectors.quickLinks);
+  }
+
+  public async isQuickLinksVisible(): Promise<boolean> {
+    return await this.isElementVisible(this.selectors.quickLinks);
+  }
+
+  public async isDistrictStatesVisible(): Promise<boolean> {
+    return await this.isElementVisible(this.selectors.districtStates);
+  }
+
+  public async isContactInfoVisible(): Promise<boolean> {
+    return await this.isElementVisible(this.selectors.contactInfo);
+  }
+
+  public async isDistrictMapVisible(): Promise<boolean> {
+    return await this.isElementVisible(this.selectors.districtMap);
   }
 
   // Social media interactions

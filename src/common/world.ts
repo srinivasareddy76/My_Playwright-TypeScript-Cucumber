@@ -220,6 +220,10 @@ export class CustomWorld extends World implements ICustomWorld {
         return await this.homePage.isPageLoaded();
       case 'search-results':
         return await this.searchResultsPage.isPageLoaded();
+      case 'about':
+        // For about page, just check if we have a valid URL and page is responsive
+        const currentUrl = await this.homePage.getCurrentUrl();
+        return currentUrl.includes('frbsf.org') && currentUrl.includes('about');
       default:
         this.logger.warn(`Unknown page type: ${currentPage}`);
         return false;
