@@ -232,7 +232,7 @@ Then('I should see footer navigation links', async function (this: ICustomWorld)
 
 Then('I should see contact information', async function (this: ICustomWorld) {
   this.logger.step('Verification', 'Checking for contact information');
-  const contactInfoVisible = await this.homePage.isElementVisible('[data-testid="contact-info"], .contact, footer .contact');
+  const contactInfoVisible = await this.homePage.isContactInfoVisible();
   expect(contactInfoVisible).toBe(true);
   this.logger.assertion('Contact information is visible', contactInfoVisible);
 });
