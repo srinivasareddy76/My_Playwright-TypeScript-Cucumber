@@ -253,7 +253,8 @@ Then('all footer links should be functional', async function (this: ICustomWorld
 
 When('I scroll to the social media section', async function (this: ICustomWorld) {
   this.logger.step('Interaction', 'Scrolling to social media section');
-  await this.homePage.scrollToElement('[data-testid="social-links"], .social-media, .social-links');
+  // Social media links are in the footer, so scroll to bottom
+  await this.homePage.scrollToBottom();
 });
 
 Then('I should see LinkedIn link', async function (this: ICustomWorld) {

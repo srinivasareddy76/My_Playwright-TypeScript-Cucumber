@@ -49,7 +49,7 @@ export class HomePage extends BasePage {
     socialMediaLinks: '[data-testid="social-links"], .social-media, .social-links',
     
     // Social media specific links
-    linkedinLink: 'a[href*="linkedin"], a[aria-label*="LinkedIn"]',
+    linkedinLink: 'footer a[href*="linkedin"][aria-label*="LinkedIn"]',
     facebookLink: 'a[href*="facebook"], a[aria-label*="Facebook"]',
     twitterLink: 'a[href*="twitter"], a[href*="x.com"], a[aria-label*="Twitter"]',
     youtubeLink: 'a[href*="youtube"], a[aria-label*="YouTube"]',
