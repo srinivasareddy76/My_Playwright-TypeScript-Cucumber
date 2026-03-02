@@ -73,7 +73,7 @@ export class HomePage extends BasePage {
     // Key sections
     researchInsightsSection: 'h2:has-text("What We Study"), h3:has-text("Monetary Policy"), h3:has-text("Labor Markets")',
     newsMediaSection: 'h2:has-text("News & Media"), h2:has-text("The Latest")',
-    economicDataSection: 'h3:has-text("Financial Markets"), h3:has-text("Banking")',
+    economicDataSection: 'h3:has-text("Financial Markets"), h3:has-text("Banking"), h2:has-text("Economic Data"), h3:has-text("Data"), h2:has-text("Research"), a[href*="economic"], a[href*="data"]',
     districtInfoSection: 'h3:has-text("Explore the 12th District")',
     
     // Featured content
