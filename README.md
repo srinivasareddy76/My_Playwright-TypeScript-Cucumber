@@ -62,29 +62,146 @@ My_Playwright-TypeScript-Cucumber/
 
 ## 🛠 Prerequisites
 
+### **Required Software**
 - **Node.js** 18.0.0 or higher
-- **npm** 8.0.0 or higher
+- **npm** 8.0.0 or higher  
 - **Git** for version control
+
+### **Platform-Specific Installation**
+
+#### **Windows**
+```powershell
+# Install Node.js (choose one method):
+
+# Method 1: Download from official website
+# Visit: https://nodejs.org/en/download/
+# Download and run the Windows Installer (.msi)
+
+# Method 2: Using Chocolatey (if installed)
+choco install nodejs
+
+# Method 3: Using Winget (Windows 10/11)
+winget install OpenJS.NodeJS
+
+# Verify installation
+node --version
+npm --version
+```
+
+#### **macOS**
+```bash
+# Install Node.js (choose one method):
+
+# Method 1: Download from official website
+# Visit: https://nodejs.org/en/download/
+
+# Method 2: Using Homebrew (recommended)
+brew install node
+
+# Method 3: Using MacPorts
+sudo port install nodejs18
+
+# Verify installation
+node --version
+npm --version
+```
+
+#### **Linux (Ubuntu/Debian)**
+```bash
+# Method 1: Using NodeSource repository (recommended)
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Method 2: Using snap
+sudo snap install node --classic
+
+# Method 3: Using package manager
+sudo apt update
+sudo apt install nodejs npm
+
+# Verify installation
+node --version
+npm --version
+```
+
+#### **Linux (CentOS/RHEL/Fedora)**
+```bash
+# Method 1: Using NodeSource repository
+curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
+sudo dnf install nodejs npm
+
+# Method 2: Using package manager
+sudo dnf install nodejs npm
+
+# Verify installation
+node --version
+npm --version
+```
 
 ## ⚡ Quick Start
 
 ### 1. Clone and Install
 
+#### **Unix/Linux/macOS (Bash/Zsh)**
 ```bash
 git clone https://github.com/srinivasareddy76/My_Playwright-TypeScript-Cucumber.git
 cd My_Playwright-TypeScript-Cucumber
 npm install
 ```
 
+#### **Windows Command Prompt**
+```cmd
+git clone https://github.com/srinivasareddy76/My_Playwright-TypeScript-Cucumber.git
+cd My_Playwright-TypeScript-Cucumber
+npm install
+```
+
+#### **Windows PowerShell**
+```powershell
+git clone https://github.com/srinivasareddy76/My_Playwright-TypeScript-Cucumber.git
+Set-Location My_Playwright-TypeScript-Cucumber
+npm install
+```
+
 ### 2. Install Playwright Browsers
 
+#### **Unix/Linux/macOS (Bash/Zsh)**
 ```bash
+npx playwright install
+```
+
+#### **Windows Command Prompt**
+```cmd
+npx playwright install
+```
+
+#### **Windows PowerShell**
+```powershell
 npx playwright install
 ```
 
 ### 3. Verify Installation
 
+#### **Unix/Linux/macOS (Bash/Zsh)**
 ```bash
+# Run the verification script to check if everything is set up correctly
+node verify-installation.js
+
+# Run basic smoke test to verify framework functionality
+npm run test:headless -- --tags "@basic"
+```
+
+#### **Windows Command Prompt**
+```cmd
+REM Run the verification script to check if everything is set up correctly
+node verify-installation.js
+
+REM Run basic smoke test to verify framework functionality
+npm run test:headless -- --tags "@basic"
+```
+
+#### **Windows PowerShell**
+```powershell
 # Run the verification script to check if everything is set up correctly
 node verify-installation.js
 
@@ -102,12 +219,36 @@ The framework relies on several key configuration files that control behavior, e
 The `.env` file is the **primary configuration file** that controls all aspects of test execution. It allows you to customize the framework behavior without modifying code, making it perfect for different environments and team members.
 
 #### **Setup Process**
+
+##### **Unix/Linux/macOS (Bash/Zsh)**
 ```bash
 # 1. Copy the template file
 cp .env.example .env
 
 # 2. Edit the .env file with your preferred settings
-nano .env  # or use your preferred editor
+nano .env  # or use your preferred editor (vim, code, etc.)
+
+# 3. The .env file is automatically loaded by the framework
+```
+
+##### **Windows Command Prompt**
+```cmd
+REM 1. Copy the template file
+copy .env.example .env
+
+REM 2. Edit the .env file with your preferred settings
+notepad .env
+
+REM 3. The .env file is automatically loaded by the framework
+```
+
+##### **Windows PowerShell**
+```powershell
+# 1. Copy the template file
+Copy-Item .env.example .env
+
+# 2. Edit the .env file with your preferred settings
+notepad .env  # or code .env for VS Code
 
 # 3. The .env file is automatically loaded by the framework
 ```
@@ -258,9 +399,45 @@ HEADED=false
 ```
 
 #### **Security Best Practices**
+
+##### **Unix/Linux/macOS (Bash/Zsh)**
 ```bash
 # ✅ DO: Keep .env file secure
 echo ".env" >> .gitignore
+
+# ✅ DO: Use environment-specific values
+# Development: DEBUG=true, HEADED=true
+# Production: DEBUG=false, HEADED=false
+
+# ❌ DON'T: Commit real passwords
+# Use placeholder values in .env.example
+# Store real credentials in CI/CD secrets
+
+# ✅ DO: Rotate credentials regularly
+# Update passwords and API keys periodically
+```
+
+##### **Windows Command Prompt**
+```cmd
+REM ✅ DO: Keep .env file secure
+echo .env >> .gitignore
+
+REM ✅ DO: Use environment-specific values
+REM Development: DEBUG=true, HEADED=true
+REM Production: DEBUG=false, HEADED=false
+
+REM ❌ DON'T: Commit real passwords
+REM Use placeholder values in .env.example
+REM Store real credentials in CI/CD secrets
+
+REM ✅ DO: Rotate credentials regularly
+REM Update passwords and API keys periodically
+```
+
+##### **Windows PowerShell**
+```powershell
+# ✅ DO: Keep .env file secure
+Add-Content .gitignore ".env"
 
 # ✅ DO: Use environment-specific values
 # Development: DEBUG=true, HEADED=true
@@ -353,7 +530,47 @@ node verify-installation.js
 ```
 
 **Troubleshooting Failed Checks**
+
+##### **Unix/Linux/macOS (Bash/Zsh)**
 ```bash
+# If verification fails:
+node verify-installation.js
+
+# Example failure output:
+# ❌ @playwright/test
+# ❌ Chromium browser not installed
+
+# Fix missing dependencies:
+npm install
+
+# Fix missing browsers:
+npx playwright install
+
+# Re-run verification:
+node verify-installation.js
+```
+
+##### **Windows Command Prompt**
+```cmd
+REM If verification fails:
+node verify-installation.js
+
+REM Example failure output:
+REM ❌ @playwright/test
+REM ❌ Chromium browser not installed
+
+REM Fix missing dependencies:
+npm install
+
+REM Fix missing browsers:
+npx playwright install
+
+REM Re-run verification:
+node verify-installation.js
+```
+
+##### **Windows PowerShell**
+```powershell
 # If verification fails:
 node verify-installation.js
 
@@ -1056,6 +1273,353 @@ Cucumber World provides:
 - **Test data storage**
 - **Screenshot and trace capture**
 - **Performance measurement**
+
+## 🧪 Cross-Platform Test Execution
+
+This section provides comprehensive commands for running tests across different operating systems and shells.
+
+### **Basic Test Execution**
+
+#### **Unix/Linux/macOS (Bash/Zsh)**
+```bash
+# Run all tests
+npm test
+
+# Run tests in headed mode (visible browser)
+npm run test:headed
+
+# Run tests in headless mode (background)
+npm run test:headless
+
+# Run smoke tests only
+npm run test:smoke:t3
+
+# Run critical tests
+npm run test:critical
+
+# Run homepage-specific tests
+npm run test:homepage
+```
+
+#### **Windows Command Prompt**
+```cmd
+REM Run all tests
+npm test
+
+REM Run tests in headed mode (visible browser)
+npm run test:headed
+
+REM Run tests in headless mode (background)
+npm run test:headless
+
+REM Run smoke tests only
+npm run test:smoke:t3
+
+REM Run critical tests
+npm run test:critical
+
+REM Run homepage-specific tests
+npm run test:homepage
+```
+
+#### **Windows PowerShell**
+```powershell
+# Run all tests
+npm test
+
+# Run tests in headed mode (visible browser)
+npm run test:headed
+
+# Run tests in headless mode (background)
+npm run test:headless
+
+# Run smoke tests only
+npm run test:smoke:t3
+
+# Run critical tests
+npm run test:critical
+
+# Run homepage-specific tests
+npm run test:homepage
+```
+
+### **Browser-Specific Testing**
+
+#### **Unix/Linux/macOS (Bash/Zsh)**
+```bash
+# Test with Chromium
+npm run test:chromium
+
+# Test with Firefox
+npm run test:firefox
+
+# Test with WebKit (Safari)
+npm run test:webkit
+```
+
+#### **Windows Command Prompt**
+```cmd
+REM Test with Chromium
+npm run test:chromium
+
+REM Test with Firefox
+npm run test:firefox
+
+REM Test with WebKit (Safari)
+npm run test:webkit
+```
+
+#### **Windows PowerShell**
+```powershell
+# Test with Chromium
+npm run test:chromium
+
+# Test with Firefox
+npm run test:firefox
+
+# Test with WebKit (Safari)
+npm run test:webkit
+```
+
+### **Responsive Design Testing**
+
+#### **Unix/Linux/macOS (Bash/Zsh)**
+```bash
+# Test on mobile viewport
+npm run test:mobile
+
+# Test on tablet viewport
+npm run test:tablet
+
+# Test on desktop viewport
+npm run test:desktop
+```
+
+#### **Windows Command Prompt**
+```cmd
+REM Test on mobile viewport
+npm run test:mobile
+
+REM Test on tablet viewport
+npm run test:tablet
+
+REM Test on desktop viewport
+npm run test:desktop
+```
+
+#### **Windows PowerShell**
+```powershell
+# Test on mobile viewport
+npm run test:mobile
+
+# Test on tablet viewport
+npm run test:tablet
+
+# Test on desktop viewport
+npm run test:desktop
+```
+
+### **Advanced Test Execution**
+
+#### **Unix/Linux/macOS (Bash/Zsh)**
+```bash
+# Run tests in parallel (faster execution)
+npm run test:parallel
+
+# Run tests with retry on failure
+npm run test:retry
+
+# Run specific tags
+npm run test:headless -- --tags "@smoke"
+npm run test:headless -- --tags "@critical and @homepage"
+npm run test:headless -- --tags "not @skip"
+
+# Environment-specific testing
+ENV=t3 npm run test:smoke:t3
+ENV=t5 npm run test:smoke:t5
+
+# Custom browser and viewport
+BROWSER=firefox VIEWPORT=mobile npm run test:headless
+```
+
+#### **Windows Command Prompt**
+```cmd
+REM Run tests in parallel (faster execution)
+npm run test:parallel
+
+REM Run tests with retry on failure
+npm run test:retry
+
+REM Run specific tags
+npm run test:headless -- --tags "@smoke"
+npm run test:headless -- --tags "@critical and @homepage"
+npm run test:headless -- --tags "not @skip"
+
+REM Environment-specific testing
+set ENV=t3 && npm run test:smoke:t3
+set ENV=t5 && npm run test:smoke:t5
+
+REM Custom browser and viewport
+set BROWSER=firefox && set VIEWPORT=mobile && npm run test:headless
+```
+
+#### **Windows PowerShell**
+```powershell
+# Run tests in parallel (faster execution)
+npm run test:parallel
+
+# Run tests with retry on failure
+npm run test:retry
+
+# Run specific tags
+npm run test:headless -- --tags "@smoke"
+npm run test:headless -- --tags "@critical and @homepage"
+npm run test:headless -- --tags "not @skip"
+
+# Environment-specific testing
+$env:ENV="t3"; npm run test:smoke:t3
+$env:ENV="t5"; npm run test:smoke:t5
+
+# Custom browser and viewport
+$env:BROWSER="firefox"; $env:VIEWPORT="mobile"; npm run test:headless
+```
+
+### **Report Generation and Viewing**
+
+#### **Unix/Linux/macOS (Bash/Zsh)**
+```bash
+# Clean previous reports
+npm run clean
+
+# Run tests and open reports
+npm run test:headless && npm run report:open
+
+# View reports manually
+open reports/cucumber-report.html        # macOS
+xdg-open reports/cucumber-report.html    # Linux
+```
+
+#### **Windows Command Prompt**
+```cmd
+REM Clean previous reports
+npm run clean
+
+REM Run tests and view reports
+npm run test:headless
+start reports\cucumber-report.html
+```
+
+#### **Windows PowerShell**
+```powershell
+# Clean previous reports
+npm run clean
+
+# Run tests and view reports
+npm run test:headless
+Invoke-Item reports\cucumber-report.html
+
+# Alternative: Open with default browser
+Start-Process reports\cucumber-report.html
+```
+
+### **Development and Debugging**
+
+#### **Unix/Linux/macOS (Bash/Zsh)**
+```bash
+# Run with debug output
+DEBUG=true npm run test:headed
+
+# Run single scenario for debugging
+npm run test:headed -- --tags "@debug"
+
+# Type checking
+npm run type-check
+
+# Linting and formatting
+npm run lint
+npm run lint:fix
+npm run format
+```
+
+#### **Windows Command Prompt**
+```cmd
+REM Run with debug output
+set DEBUG=true && npm run test:headed
+
+REM Run single scenario for debugging
+npm run test:headed -- --tags "@debug"
+
+REM Type checking
+npm run type-check
+
+REM Linting and formatting
+npm run lint
+npm run lint:fix
+npm run format
+```
+
+#### **Windows PowerShell**
+```powershell
+# Run with debug output
+$env:DEBUG="true"; npm run test:headed
+
+# Run single scenario for debugging
+npm run test:headed -- --tags "@debug"
+
+# Type checking
+npm run type-check
+
+# Linting and formatting
+npm run lint
+npm run lint:fix
+npm run format
+```
+
+### **Troubleshooting Common Issues**
+
+#### **Unix/Linux/macOS (Bash/Zsh)**
+```bash
+# Clear node modules and reinstall
+rm -rf node_modules package-lock.json
+npm install
+
+# Reinstall browsers
+npx playwright install
+
+# Check system dependencies (Linux)
+npx playwright install-deps
+
+# Verify installation
+node verify-installation.js
+```
+
+#### **Windows Command Prompt**
+```cmd
+REM Clear node modules and reinstall
+rmdir /s /q node_modules
+del package-lock.json
+npm install
+
+REM Reinstall browsers
+npx playwright install
+
+REM Verify installation
+node verify-installation.js
+```
+
+#### **Windows PowerShell**
+```powershell
+# Clear node modules and reinstall
+Remove-Item -Recurse -Force node_modules
+Remove-Item package-lock.json
+npm install
+
+# Reinstall browsers
+npx playwright install
+
+# Verify installation
+node verify-installation.js
+```
 
 ## 📊 Test Scenarios Coverage
 
@@ -2300,6 +2864,153 @@ npm run report:open
 
 # Clean artifacts
 npm run clean
+```
+
+## 🪟 Windows-Specific Tips and Troubleshooting
+
+### **PowerShell Execution Policy**
+If you encounter execution policy errors in PowerShell:
+
+```powershell
+# Check current execution policy
+Get-ExecutionPolicy
+
+# Set execution policy for current user (recommended)
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# Alternative: Set for current session only
+Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+```
+
+### **Path Issues**
+```powershell
+# Add Node.js to PATH if not automatically added
+$env:PATH += ";C:\Program Files\nodejs"
+
+# Verify Node.js is in PATH
+node --version
+npm --version
+
+# Refresh environment variables
+refreshenv  # If using Chocolatey
+```
+
+### **Long Path Support (Windows 10/11)**
+Enable long path support for deep node_modules:
+
+```powershell
+# Run as Administrator
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
+```
+
+### **Windows Defender Exclusions**
+Add project folder to Windows Defender exclusions for better performance:
+
+```powershell
+# Run as Administrator
+Add-MpPreference -ExclusionPath "C:\path\to\your\project"
+Add-MpPreference -ExclusionPath "$env:APPDATA\npm"
+```
+
+### **Common Windows Issues and Solutions**
+
+#### **Issue: "npm command not found"**
+```powershell
+# Solution 1: Restart terminal after Node.js installation
+# Solution 2: Add npm to PATH manually
+$env:PATH += ";C:\Users\$env:USERNAME\AppData\Roaming\npm"
+
+# Solution 3: Reinstall Node.js with "Add to PATH" option checked
+```
+
+#### **Issue: "Permission denied" errors**
+```powershell
+# Solution 1: Run terminal as Administrator
+# Solution 2: Configure npm to use different directory
+npm config set prefix "$env:APPDATA\npm"
+
+# Solution 3: Use npx instead of global installs
+npx playwright install
+```
+
+#### **Issue: "ENOENT" or "EPERM" errors**
+```cmd
+REM Solution 1: Clear npm cache
+npm cache clean --force
+
+REM Solution 2: Delete node_modules and reinstall
+rmdir /s /q node_modules
+del package-lock.json
+npm install
+```
+
+#### **Issue: Playwright browsers not installing**
+```powershell
+# Solution 1: Install with elevated permissions
+Start-Process powershell -Verb RunAs -ArgumentList "cd '$PWD'; npx playwright install"
+
+# Solution 2: Manual browser installation
+npx playwright install chromium
+npx playwright install firefox
+npx playwright install webkit
+
+# Solution 3: Install system dependencies
+npx playwright install-deps
+```
+
+### **Performance Optimization for Windows**
+
+```powershell
+# Use faster package manager (if available)
+npm install -g pnpm
+pnpm install  # Instead of npm install
+
+# Enable parallel processing
+$env:NODE_OPTIONS="--max-old-space-size=4096"
+
+# Use Windows Subsystem for Linux (WSL) for better performance
+wsl --install
+# Then run tests in WSL environment
+```
+
+### **IDE Configuration for Windows**
+
+#### **Visual Studio Code**
+```json
+// .vscode/settings.json
+{
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.profiles.windows": {
+    "PowerShell": {
+      "source": "PowerShell",
+      "args": ["-NoProfile"]
+    }
+  },
+  "files.eol": "\n",
+  "git.autocrlf": false
+}
+```
+
+#### **Environment Variables in VS Code**
+```json
+// .vscode/launch.json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Tests",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/.bin/cucumber-js",
+      "args": ["--profile", "headed", "--tags", "@debug"],
+      "env": {
+        "HEADED": "true",
+        "DEBUG": "true"
+      },
+      "console": "integratedTerminal"
+    }
+  ]
+}
 ```
 
 ### Support Contacts

@@ -100,7 +100,7 @@ Before(async function (this: ICustomWorld, scenario) {
     await browserManager.createContext();
     
     // Initialize page objects
-    // await this.initializePageObjects();
+    await this.initializePageObjects();
 
     // Set scenario start time for performance measurement
     this.testStartTime = Date.now();
