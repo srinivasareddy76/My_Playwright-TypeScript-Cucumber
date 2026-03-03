@@ -5,13 +5,16 @@
 
 
 
-import { Before, After, BeforeAll, AfterAll, Status } from '@cucumber/cucumber';
+import { Before, After, BeforeAll, AfterAll, Status, setDefaultTimeout } from '@cucumber/cucumber';
 import { ICustomWorld } from './world';
 import { BrowserManager } from '../utils/browser-manager';
 import { EnvironmentManager } from '../config/environment';
 import { Logger } from '../utils/logger';
 import * as fs from 'fs';
 import * as path from 'path';
+
+// Set default timeout for all steps to 60 seconds
+setDefaultTimeout(60000);
 
 // Global instances
 let browserManager: BrowserManager;
