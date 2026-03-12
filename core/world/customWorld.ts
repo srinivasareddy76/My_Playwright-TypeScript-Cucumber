@@ -51,6 +51,16 @@ export interface ICustomWorld extends World {
     videos?: string[];
     traces?: string[];
   };
+
+  // Viewport management methods
+  setMobileViewport(): Promise<void>;
+  setTabletViewport(): Promise<void>;
+  setDesktopViewport(): Promise<void>;
+
+  // Navigation helper methods
+  goBack(): Promise<void>;
+  goForward(): Promise<void>;
+  refreshCurrentPage(): Promise<void>;
 }
 
 export class CustomWorld extends World implements ICustomWorld {
