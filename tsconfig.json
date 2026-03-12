@@ -30,26 +30,34 @@
     "emitDecoratorMetadata": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"],
-      "@tests/*": ["tests/*"],
-      "@pages/*": ["tests/pages/*"],
-      "@utils/*": ["src/utils/*"],
-      "@config/*": ["src/config/*"],
-      "@common/*": ["src/common/*"],
-      "@database/*": ["src/database/*"]
+      "@/*": ["./"],
+      "@core/*": ["core/*"],
+      "@config/*": ["config/*"],
+      "@applications/*": ["applications/*"],
+      "@api/*": ["api/*"],
+      "@credentials/*": ["credentials/*"],
+      "@certs/*": ["certs/*"],
+      "@scripts/*": ["scripts/*"],
+      "@reports/*": ["reports/*"]
     },
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
   "include": [
-    "src/**/*",
-    "tests/**/*",
-    "cucumber.js"
+    "applications/**/*",
+    "api/**/*",
+    "core/**/*",
+    "config/**/*",
+    "scripts/**/*",
+    "playwright.config.ts",
+    "cucumber.config.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
     "reports",
     "test-results",
+    "credentials",
+    "certs",
     "**/*.d.ts"
   ],
   "ts-node": {

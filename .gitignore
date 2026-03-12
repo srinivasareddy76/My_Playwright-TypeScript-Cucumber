@@ -87,4 +87,40 @@ temp/
 # package-lock.json
 # yarn.lock
 
+# Credentials and certificates (IMPORTANT: Never commit these)
+credentials/*.json
+!credentials/users.json.example
+!credentials/serviceAccounts.json.example
+certs/*.pem
+certs/*.pfx
+certs/*.p12
+certs/*.key
+certs/*.crt
+certs/*.cer
+!certs/README.md
+
+# Sensitive configuration files
+config/secrets/
+*.secret
+*.private
+
+# Playwright specific
+.playwright/
+.playwright-browsers-installed
+
+# Cache directories
+.cache/
+.npm/
+.eslintcache
+.stylelintcache
+
+# Coverage reports
+coverage/
+*.lcov
+.nyc_output/
+
+# Allure reports
+allure-results/
+allure-report/
+
 
