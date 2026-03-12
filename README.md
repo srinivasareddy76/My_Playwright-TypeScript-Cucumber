@@ -1,3032 +1,472 @@
 
 
+# Playwright TypeScript Cucumber Framework
 
+A comprehensive, enterprise-ready test automation framework built with Playwright, TypeScript, and Cucumber BDD. This framework supports multi-application testing, API testing, cross-browser testing, and provides extensive reporting capabilities.
 
-
-
-
-# My_Playwright-TypeScript-Cucumber
-
-A comprehensive test automation framework for the Federal Reserve Bank of San Francisco (FRBSF) website using Playwright, TypeScript, and Cucumber with BDD approach.
-
-## 🎉 **FRAMEWORK STATUS: 100% SUCCESS RATE ACHIEVED!** 🎉
-
-✅ **All 15 test scenarios passing** (113/113 steps)  
-✅ **Zero failures, zero skipped tests**  
-✅ **Comprehensive coverage**: Homepage, Navigation, Search, Performance, Responsive Design, Accessibility  
-✅ **Production ready** with full reporting capabilities  
-✅ **Real FRBSF website compatibility verified**  
-
-**Latest Test Results:**
-- **Success Rate**: 100.00% (15/15 scenarios)
-- **Total Steps**: 113/113 passing
-- **Execution Time**: ~33 seconds
-- **Last Updated**: February 2026
-
-## 🚀 Framework Overview
-
-This framework provides robust end-to-end testing capabilities for the FRBSF website with:
-
-- **Playwright 1.58.1** for reliable browser automation
-- **TypeScript** for type safety and better development experience
-- **Cucumber** with Gherkin syntax for BDD testing
-- **Page Object Model (POM)** design pattern
-- **Multi-environment support** (t3, t5)
-- **Cross-browser testing** (Chromium, Firefox, WebKit)
-- **Responsive design testing** (Desktop, Tablet, Mobile)
-- **Performance testing** capabilities
-- **Comprehensive reporting** with HTML and JSON outputs
-
-## 📁 Project Structure
+## 🏗️ Framework Architecture
 
 ```
 My_Playwright-TypeScript-Cucumber/
-├── tests/
-│   ├── apps/
-│   │   └── frbsf/
-│   │       ├── features/           # Gherkin feature files
-│   │       ├── pages/              # Page Object Models
-│   │       └── steps/              # Step definitions
-│   └── pages/                      # Base page classes
-├── src/
-│   ├── config/                     # Environment management
-│   ├── utils/                      # Test utilities
-│   ├── common/                     # Cucumber hooks & world
-│   └── database/                   # SQL utilities (optional)
-├── reports/                        # Generated test reports
-├── package.json                    # Dependencies and scripts
-├── tsconfig.json                   # TypeScript configuration
-├── cucumber.js                     # Cucumber profiles
-└── README.md                       # This file
+├── applications/           # Application-specific tests
+│   ├── frbsf/             # FRBSF website tests
+│   │   ├── features/      # Feature files
+│   │   ├── pages/         # Page Object Models
+│   │   └── step-definitions/ # Step definitions
+│   └── app1/              # Example application tests
+│       ├── features/
+│       ├── pages/
+│       └── step-definitions/
+├── api/                   # API testing framework
+│   ├── clients/           # API clients
+│   ├── features/          # API feature files
+│   ├── payloads/          # Request payloads
+│   ├── schemas/           # Response schemas
+│   └── step-definitions/  # API step definitions
+├── core/                  # Core framework components
+│   ├── base/              # Base classes
+│   │   ├── basePage.ts    # Base page class
+│   │   └── baseAPI.ts     # Base API class
+│   ├── hooks/             # Cucumber hooks
+│   │   ├── beforeHooks.ts
+│   │   └── afterHooks.ts
+│   ├── utilities/         # Utility classes
+│   │   ├── browserManager.ts
+│   │   └── logger.ts
+│   └── world/             # Custom world
+│       └── customWorld.ts
+├── config/                # Configuration files
+│   ├── env/               # Environment configs
+│   │   ├── dev.env.ts
+│   │   ├── qa.env.ts
+│   │   └── prod.env.ts
+│   └── environment.ts     # Environment manager
+├── credentials/           # Test credentials
+│   ├── users.json         # User credentials
+│   └── serviceAccounts.json # Service accounts
+├── certs/                 # SSL certificates
+├── scripts/               # Shell scripts
+│   ├── run-tests.sh       # Test execution script
+│   └── setup.sh           # Setup script
+├── reports/               # Test reports
+├── playwright.config.ts   # Playwright configuration
+├── cucumber.config.ts     # Cucumber configuration
+└── package.json           # Dependencies and scripts
 ```
 
-## 🛠 Prerequisites
+## 🚀 Quick Start
 
-### **Required Software**
-- **Node.js** 18.0.0 or higher
-- **npm** 8.0.0 or higher  
-- **Git** for version control
+### Prerequisites
 
-### **Platform-Specific Installation**
+- Node.js 18+ and npm 8+
+- Git
 
-#### **Windows**
-```powershell
-# Install Node.js (choose one method):
+### Installation
 
-# Method 1: Download from official website
-# Visit: https://nodejs.org/en/download/
-# Download and run the Windows Installer (.msi)
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/srinivasareddy76/My_Playwright-TypeScript-Cucumber.git
+   cd My_Playwright-TypeScript-Cucumber
+   ```
 
-# Method 2: Using Chocolatey (if installed)
-choco install nodejs
+2. **Run the setup script:**
+   ```bash
+   ./scripts/setup.sh
+   ```
 
-# Method 3: Using Winget (Windows 10/11)
-winget install OpenJS.NodeJS
+3. **Update configuration:**
+   - Edit `.env` file with your environment settings
+   - Update `credentials/users.json` with test user credentials
+   - Add SSL certificates to `certs/` directory if needed
 
-# Verify installation
-node --version
-npm --version
-```
+### Running Tests
 
-#### **macOS**
+#### Using npm scripts:
 ```bash
-# Install Node.js (choose one method):
-
-# Method 1: Download from official website
-# Visit: https://nodejs.org/en/download/
-
-# Method 2: Using Homebrew (recommended)
-brew install node
-
-# Method 3: Using MacPorts
-sudo port install nodejs18
-
-# Verify installation
-node --version
-npm --version
-```
-
-#### **Linux (Ubuntu/Debian)**
-```bash
-# Method 1: Using NodeSource repository (recommended)
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt-get install -y nodejs
-
-# Method 2: Using snap
-sudo snap install node --classic
-
-# Method 3: Using package manager
-sudo apt update
-sudo apt install nodejs npm
-
-# Verify installation
-node --version
-npm --version
-```
-
-#### **Linux (CentOS/RHEL/Fedora)**
-```bash
-# Method 1: Using NodeSource repository
-curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
-sudo dnf install nodejs npm
-
-# Method 2: Using package manager
-sudo dnf install nodejs npm
-
-# Verify installation
-node --version
-npm --version
-```
-
-## ⚡ Quick Start
-
-### 1. Clone and Install
-
-#### **Unix/Linux/macOS (Bash/Zsh)**
-```bash
-git clone https://github.com/srinivasareddy76/My_Playwright-TypeScript-Cucumber.git
-cd My_Playwright-TypeScript-Cucumber
-npm install
-```
-
-#### **Windows Command Prompt**
-```cmd
-git clone https://github.com/srinivasareddy76/My_Playwright-TypeScript-Cucumber.git
-cd My_Playwright-TypeScript-Cucumber
-npm install
-```
-
-#### **Windows PowerShell**
-```powershell
-git clone https://github.com/srinivasareddy76/My_Playwright-TypeScript-Cucumber.git
-Set-Location My_Playwright-TypeScript-Cucumber
-npm install
-```
-
-### 2. Install Playwright Browsers
-
-#### **Unix/Linux/macOS (Bash/Zsh)**
-```bash
-npx playwright install
-```
-
-#### **Windows Command Prompt**
-```cmd
-npx playwright install
-```
-
-#### **Windows PowerShell**
-```powershell
-npx playwright install
-```
-
-### 3. Verify Installation
-
-#### **Unix/Linux/macOS (Bash/Zsh)**
-```bash
-# Run the verification script to check if everything is set up correctly
-node verify-installation.js
-
-# Run basic smoke test to verify framework functionality
-npm run test:headless -- --tags "@basic"
-```
-
-#### **Windows Command Prompt**
-```cmd
-REM Run the verification script to check if everything is set up correctly
-node verify-installation.js
-
-REM Run basic smoke test to verify framework functionality
-npm run test:headless -- --tags "@basic"
-```
-
-#### **Windows PowerShell**
-```powershell
-# Run the verification script to check if everything is set up correctly
-node verify-installation.js
-
-# Run basic smoke test to verify framework functionality
-npm run test:headless -- --tags "@basic"
-```
-
-## 📋 Essential Configuration Files
-
-The framework relies on several key configuration files that control behavior, environment settings, and test execution. Understanding these files is crucial for proper setup and customization.
-
-### 🔧 `.env` File - Environment Configuration
-
-#### **Purpose and Importance**
-The `.env` file is the **primary configuration file** that controls all aspects of test execution. It allows you to customize the framework behavior without modifying code, making it perfect for different environments and team members.
-
-#### **Setup Process**
-
-##### **Unix/Linux/macOS (Bash/Zsh)**
-```bash
-# 1. Copy the template file
-cp .env.example .env
-
-# 2. Edit the .env file with your preferred settings
-nano .env  # or use your preferred editor (vim, code, etc.)
-
-# 3. The .env file is automatically loaded by the framework
-```
-
-##### **Windows Command Prompt**
-```cmd
-REM 1. Copy the template file
-copy .env.example .env
-
-REM 2. Edit the .env file with your preferred settings
-notepad .env
-
-REM 3. The .env file is automatically loaded by the framework
-```
-
-##### **Windows PowerShell**
-```powershell
-# 1. Copy the template file
-Copy-Item .env.example .env
-
-# 2. Edit the .env file with your preferred settings
-notepad .env  # or code .env for VS Code
-
-# 3. The .env file is automatically loaded by the framework
-```
-
-#### **Complete Configuration Reference**
-
-```env
-# ========================================
-# CORE TEST ENVIRONMENT SETTINGS
-# ========================================
-
-# Test Environment Selection
-ENV=t3                    # Options: t3, t5
-                         # t3: Test environment 3 (https://frbsf.org)
-                         # t5: Test environment 5 (https://frbsf.org)
-
-# ========================================
-# BROWSER CONFIGURATION
-# ========================================
-
-# Browser Selection
-BROWSER=chromium         # Options: chromium, firefox, webkit
-                        # chromium: Google Chrome/Chromium (recommended)
-                        # firefox: Mozilla Firefox
-                        # webkit: Safari WebKit engine
-
-# Display Mode
-HEADED=false            # Options: true, false
-                       # true: Show browser window (debugging)
-                       # false: Run headless (CI/CD, faster)
-
-# Screen Resolution
-VIEWPORT=desktop        # Options: desktop, tablet, mobile
-                       # desktop: 1920x1080 (default)
-                       # tablet: 768x1024
-                       # mobile: 375x667
-
-# Performance Settings
-TIMEOUT=30000          # Default timeout in milliseconds (30 seconds)
-SLOW_MO=0             # Delay between actions in ms (0 = no delay)
-
-# ========================================
-# TEST EXECUTION CONTROL
-# ========================================
-
-# Parallel Execution
-PARALLEL=3            # Number of parallel test workers
-                     # Higher = faster execution, more resource usage
-                     # Lower = more stable, less resource usage
-
-# Retry Configuration
-RETRY=2              # Number of retry attempts for failed tests
-                    # 0 = no retries, 1-3 = recommended range
-
-# Test Selection
-TAGS=@smoke         # Default Cucumber tags to run
-                   # Examples: @smoke, @critical, @homepage
-                   # Multiple: "@smoke and @critical"
-
-# ========================================
-# DATABASE CONFIGURATION (Optional)
-# ========================================
-
-# Database Connection (Override environment defaults)
-DB_HOST=                    # Database hostname
-DB_PORT=1521               # Database port (Oracle default)
-DB_SERVICE_ID=             # Database service identifier
-DB_USERNAME=               # Database username
-DB_PASSWORD=               # Database password (keep secure!)
-
-# ========================================
-# APPLICATION CREDENTIALS (Optional)
-# ========================================
-
-# Application-specific passwords
-APP_PASSWORD=              # Main application password
-ISVA_PASSWORD=            # ISVA system password
-
-# ========================================
-# REPORTING AND ARTIFACTS
-# ========================================
-
-# Report Locations
-REPORT_PATH=./reports                    # Main reports directory
-SCREENSHOT_PATH=./reports/screenshots    # Screenshot storage
-VIDEO_PATH=./reports/videos             # Video recording storage
-
-# ========================================
-# CI/CD AND AUTOMATION
-# ========================================
-
-# CI/CD Detection
-CI=false                  # Set to true in CI/CD pipelines
-GITHUB_ACTIONS=false     # Auto-detected in GitHub Actions
-
-# ========================================
-# DEBUGGING AND DEVELOPMENT
-# ========================================
-
-# Debug Settings
-DEBUG=false              # Enable detailed debug logging
-VERBOSE=false           # Enable verbose output
-```
-
-#### **Environment-Specific Examples**
-
-**Development Setup (Local Testing)**
-```env
-ENV=t3
-BROWSER=chromium
-HEADED=true              # See browser for debugging
-VIEWPORT=desktop
-TIMEOUT=30000
-SLOW_MO=500             # Slow down for observation
-PARALLEL=1              # Single thread for debugging
-RETRY=0                 # No retries for faster feedback
-DEBUG=true              # Detailed logging
-VERBOSE=true            # Extra output
-```
-
-**CI/CD Setup (Automated Testing)**
-```env
-ENV=t3
-BROWSER=chromium
-HEADED=false            # Headless for CI/CD
-VIEWPORT=desktop
-TIMEOUT=60000           # Longer timeout for slower CI
-SLOW_MO=0              # No delays
-PARALLEL=3             # Parallel execution
-RETRY=2                # Retry failed tests
-CI=true                # CI mode
-DEBUG=false            # Minimal logging
-```
-
-**Cross-Browser Testing**
-```env
-# For Chromium
-BROWSER=chromium
-HEADED=false
-
-# For Firefox (change and re-run)
-BROWSER=firefox
-HEADED=false
-
-# For WebKit (change and re-run)
-BROWSER=webkit
-HEADED=false
-```
-
-#### **Security Best Practices**
-
-##### **Unix/Linux/macOS (Bash/Zsh)**
-```bash
-# ✅ DO: Keep .env file secure
-echo ".env" >> .gitignore
-
-# ✅ DO: Use environment-specific values
-# Development: DEBUG=true, HEADED=true
-# Production: DEBUG=false, HEADED=false
-
-# ❌ DON'T: Commit real passwords
-# Use placeholder values in .env.example
-# Store real credentials in CI/CD secrets
-
-# ✅ DO: Rotate credentials regularly
-# Update passwords and API keys periodically
-```
-
-##### **Windows Command Prompt**
-```cmd
-REM ✅ DO: Keep .env file secure
-echo .env >> .gitignore
-
-REM ✅ DO: Use environment-specific values
-REM Development: DEBUG=true, HEADED=true
-REM Production: DEBUG=false, HEADED=false
-
-REM ❌ DON'T: Commit real passwords
-REM Use placeholder values in .env.example
-REM Store real credentials in CI/CD secrets
-
-REM ✅ DO: Rotate credentials regularly
-REM Update passwords and API keys periodically
-```
-
-##### **Windows PowerShell**
-```powershell
-# ✅ DO: Keep .env file secure
-Add-Content .gitignore ".env"
-
-# ✅ DO: Use environment-specific values
-# Development: DEBUG=true, HEADED=true
-# Production: DEBUG=false, HEADED=false
-
-# ❌ DON'T: Commit real passwords
-# Use placeholder values in .env.example
-# Store real credentials in CI/CD secrets
-
-# ✅ DO: Rotate credentials regularly
-# Update passwords and API keys periodically
-```
-
-### 🔍 `verify-installation.js` - Installation Validator
-
-#### **Purpose and Functionality**
-The `verify-installation.js` script is a **comprehensive installation checker** that validates your framework setup before running tests. It prevents common setup issues and provides clear feedback on missing components.
-
-#### **What It Checks**
-
-**1. Required Files Validation**
-```javascript
-// Checks for essential framework files
-const requiredFiles = [
-  'package.json',           // Node.js project configuration
-  'tsconfig.json',          // TypeScript configuration
-  'cucumber.js',            // Cucumber test profiles
-  '.env.example',           // Environment template
-  'src/common/world.ts',    // Cucumber world context
-  'src/config/environment.ts', // Environment management
-  // ... all step definition files
-];
-```
-
-**2. Dependency Verification**
-```javascript
-// Validates critical npm packages
-const criticalDeps = [
-  '@cucumber/cucumber',     // BDD test framework
-  '@playwright/test',       // Browser automation
-  'typescript',            // TypeScript compiler
-  'ts-node',              // TypeScript execution
-  'tsconfig-paths'        // Path mapping support
-];
-```
-
-**3. Browser Installation Check**
-```javascript
-// Verifies Playwright browsers are installed
-const browsers = ['chromium', 'firefox', 'webkit'];
-// Checks if browser binaries are available
-```
-
-**4. Configuration Validation**
-```javascript
-// Validates configuration files
-- TypeScript compilation check
-- Cucumber profile validation
-- Environment configuration test
-```
-
-#### **Usage Examples**
-
-**Basic Verification**
-```bash
-# Run the verification script
-node verify-installation.js
-
-# Expected output:
-# 🔍 Verifying Playwright TypeScript Cucumber Framework Installation...
-# 
-# 📁 Checking required files:
-#    ✅ package.json
-#    ✅ tsconfig.json
-#    ✅ cucumber.js
-#    ... (all files listed)
-# 
-# 📦 Checking dependencies:
-#    ✅ node_modules directory
-#    ✅ @cucumber/cucumber
-#    ✅ @playwright/test
-#    ... (all dependencies listed)
-# 
-# 🎭 Checking Playwright browsers:
-#    ✅ Chromium browser installed
-#    ✅ Firefox browser installed
-#    ✅ WebKit browser installed
-# 
-# ✅ All checks passed! Framework is ready to use.
-```
-
-**Troubleshooting Failed Checks**
-
-##### **Unix/Linux/macOS (Bash/Zsh)**
-```bash
-# If verification fails:
-node verify-installation.js
-
-# Example failure output:
-# ❌ @playwright/test
-# ❌ Chromium browser not installed
-
-# Fix missing dependencies:
-npm install
-
-# Fix missing browsers:
-npx playwright install
-
-# Re-run verification:
-node verify-installation.js
-```
-
-##### **Windows Command Prompt**
-```cmd
-REM If verification fails:
-node verify-installation.js
-
-REM Example failure output:
-REM ❌ @playwright/test
-REM ❌ Chromium browser not installed
-
-REM Fix missing dependencies:
-npm install
-
-REM Fix missing browsers:
-npx playwright install
-
-REM Re-run verification:
-node verify-installation.js
-```
-
-##### **Windows PowerShell**
-```powershell
-# If verification fails:
-node verify-installation.js
-
-# Example failure output:
-# ❌ @playwright/test
-# ❌ Chromium browser not installed
-
-# Fix missing dependencies:
-npm install
-
-# Fix missing browsers:
-npx playwright install
-
-# Re-run verification:
-node verify-installation.js
-```
-
-#### **Integration with Development Workflow**
-```bash
-# Add to package.json scripts
-{
-  "scripts": {
-    "verify": "node verify-installation.js",
-    "pretest": "npm run verify",  # Auto-verify before tests
-    "setup": "npm install && npx playwright install && npm run verify"
-  }
-}
-
-# Use in CI/CD pipelines
-- name: Verify Installation
-  run: node verify-installation.js
-```
-
-### ⚙️ `cucumber.js` - Test Execution Profiles
-
-#### **Purpose and Architecture**
-The `cucumber.js` file defines **test execution profiles** that control how Cucumber runs your tests. It provides pre-configured setups for different testing scenarios, environments, and execution modes.
-
-#### **Profile Structure and Configuration**
-
-**Base Configuration**
-```javascript
-// Common settings shared across all profiles
-const common = [
-  'tests/apps/frbsf/features/**/*.feature',  // Feature file locations
-  '--require-module ts-node/register',       // TypeScript support
-  '--require-module tsconfig-paths/register', // Path mapping
-  '--require src/common/world.ts',           // Cucumber world
-  '--require tests/apps/frbsf/steps/**/*.ts', // Step definitions
-  '--require src/common/hooks.ts',           // Before/After hooks
-  '--format-options \'{"snippetInterface": "async-await"}\'',
-  '--world-parameters \'{"foo": "bar"}\''
-].join(' ');
-
-// Report formatting options
-const formats = [
-  '--format progress-bar',                    // Console progress
-  '--format json:reports/cucumber-report.json', // JSON report
-  '--format html:reports/cucumber-report.html'  // HTML report
-].join(' ');
-```
-
-#### **Available Profiles and Usage**
-
-**1. Basic Execution Profiles**
-```bash
-# Default profile (all tests)
-npm test
-# Uses: cucumber.js default profile
-
-# Headed mode (visible browser)
-npm run test:headed
-# Uses: cucumber.js headed profile
-
-# Headless mode (background)
-npm run test:headless
-# Uses: cucumber.js headless profile
-```
-
-**2. Test Category Profiles**
-```bash
-# Smoke tests (critical functionality)
+# Run smoke tests
 npm run test:smoke
-# Profile: --tags "@smoke"
-
-# Critical tests (high priority)
-npm run test:critical
-# Profile: --tags "@critical"
-
-# Homepage-specific tests
-npm run test:homepage
-# Profile: --tags "@homepage"
-
-# Search functionality tests
-npm run test:search
-# Profile: --tags "@search"
-```
-
-**3. Environment-Specific Profiles**
-```bash
-# T3 environment tests
-npm run test:smoke:t3
-# Profile: --tags "not @t5-only"
-
-# T5 environment tests
-npm run test:smoke:t5
-# Profile: --tags "not @t3-only"
-```
-
-**4. Browser-Specific Profiles**
-```bash
-# Chromium browser tests
-npm run test:chromium
-# Profile: --tags "not @firefox-only and not @webkit-only"
-
-# Firefox browser tests
-npm run test:firefox
-# Profile: --tags "not @chromium-only and not @webkit-only"
-
-# WebKit browser tests
-npm run test:webkit
-# Profile: --tags "not @chromium-only and not @firefox-only"
-```
-
-**5. Performance and Execution Profiles**
-```bash
-# Parallel execution (faster)
-npm run test:parallel
-# Profile: --parallel 3
-
-# Retry failed tests
-npm run test:retry
-# Profile: --retry 2
-
-# CI/CD optimized
-npm run test:ci
-# Profile: JSON + JUnit reports, no HTML
-```
-
-#### **Custom Profile Configuration**
-
-**Creating New Profiles**
-```javascript
-// Add to cucumber.js
-module.exports = {
-  // ... existing profiles ...
-  
-  // Custom profile for API tests
-  'api-tests': `${common} ${formats} --tags "@api"`,
-  
-  // Custom profile for mobile testing
-  'mobile-only': `${common} ${formats} --tags "@mobile and not @desktop-only"`,
-  
-  // Custom profile for regression testing
-  'full-regression': `${common} ${formats} --tags "not @skip and not @wip" --parallel 5`,
-  
-  // Custom profile for debugging
-  'debug-mode': `${common} --format progress-bar --tags "@debug" --fail-fast`
-};
-```
-
-**Using Custom Profiles**
-```bash
-# Add to package.json
-{
-  "scripts": {
-    "test:api": "cucumber-js --profile api-tests",
-    "test:mobile": "cucumber-js --profile mobile-only",
-    "test:regression": "cucumber-js --profile full-regression",
-    "test:debug": "cucumber-js --profile debug-mode"
-  }
-}
-
-# Run custom profiles
-npm run test:api
-npm run test:mobile
-npm run test:regression
-```
-
-#### **Advanced Profile Features**
-
-**Tag Combinations**
-```javascript
-// Complex tag logic
-'complex-tags': `${common} ${formats} --tags "(@smoke or @critical) and not @skip and not @manual"`
-
-// Environment-specific with feature tags
-'smoke-t3': `${common} ${formats} --tags "@smoke and not @t5-only"`
-```
-
-**Report Customization**
-```javascript
-// Different report formats for different profiles
-'ci-reports': `${common} --format json:reports/ci-report.json --format junit:reports/junit.xml`,
-'dev-reports': `${common} --format progress-bar --format html:reports/dev-report.html`
-```
-
-**Performance Optimization**
-```javascript
-// High-performance profile
-'performance': `${common} ${formats} --parallel 5 --retry 1 --fail-fast --tags "@smoke"`
-
-// Thorough testing profile
-'thorough': `${common} ${formats} --parallel 1 --retry 3 --tags "not @skip"`
-```
-
-#### **Profile Selection Strategy**
-
-**Development Phase**
-```bash
-npm run test:headed     # Visual debugging
-npm run test:debug      # Specific issue investigation
-npm run test:smoke      # Quick validation
-```
-
-**CI/CD Pipeline**
-```bash
-npm run test:ci         # Optimized for automation
-npm run test:parallel   # Fast execution
-npm run test:retry      # Handle flaky tests
-```
-
-**Release Testing**
-```bash
-npm run test:regression # Full test suite
-npm run test:cross-browser # Multiple browsers
-npm run test:performance   # Performance validation
-```
-
-### 3. Environment Setup
-
-#### Understanding Environment Configuration
-
-The framework uses a two-tier configuration system:
-
-1. **`.env.example`** - Template file showing all available configuration options
-2. **`.env`** - Your actual configuration file (not tracked in git for security)
-
-#### Setting Up Your Environment
-
-Copy the environment template and configure:
-
-```bash
-cp .env.example .env
-```
-
-**What does `cp .env.example .env` mean?**
-- `cp` = copy command
-- `.env.example` = source file (template with example values)
-- `.env` = destination file (your actual configuration)
-
-This creates a copy of the template file that you can customize with your actual values.
-
-#### Edit Your `.env` File
-
-Open the `.env` file and configure your settings:
-
-```env
-# Basic Configuration
-ENV=t3                    # Environment: t3 or t5
-BROWSER=chromium          # Browser: chromium, firefox, webkit
-HEADED=false              # Show browser UI: true or false
-VIEWPORT=desktop          # Screen size: desktop, tablet, mobile
-
-# Performance Settings
-TIMEOUT=30000             # Default timeout in milliseconds
-PARALLEL=3                # Number of parallel test workers
-RETRY=2                   # Retry attempts for failed tests
-
-# Database Settings (Optional - overrides defaults)
-DB_HOST=your-db-host.com
-DB_USERNAME=your_username
-DB_PASSWORD=your_password
-
-# Application Credentials (If needed)
-APP_PASSWORD=your_app_password
-ISVA_PASSWORD=your_isva_password
-```
-
-#### Environment Configuration Files
-
-The framework includes these configuration files:
-
-| File | Purpose | Tracked in Git |
-|------|---------|----------------|
-| `.env.example` | Template with example values | ✅ Yes |
-| `.env` | Your actual configuration | ❌ No (security) |
-| `src/config/environment.ts` | Environment definitions | ✅ Yes |
-
-#### Available Environments
-
-The framework supports multiple environments defined in `src/config/environment.ts`:
-
-**T3 Environment (Test)**
-```typescript
-t3: {
-  baseUrl: 'https://frbsf.org',
-  database: {
-    host: 't3-db-host.example.com',
-    port: 1521,
-    serviceId: 'T3DB'
-  }
-}
-```
-
-**T5 Environment (Test)**
-```typescript
-t5: {
-  baseUrl: 'https://frbsf.org',
-  database: {
-    host: 't5-db-host.example.com',
-    port: 1521,
-    serviceId: 'T5DB'
-  }
-}
-```
-
-#### Environment Configuration Examples
-
-**Example 1: Basic Setup**
-```bash
-# Copy template
-cp .env.example .env
-
-# Edit .env file
-ENV=t3
-BROWSER=chromium
-HEADED=false
-```
-
-**Example 2: Development Setup (with visible browser)**
-```bash
-# Edit .env file
-ENV=t3
-BROWSER=chromium
-HEADED=true
-SLOW_MO=1000
-DEBUG=true
-```
-
-**Example 3: CI/CD Setup (fast execution)**
-```bash
-# Edit .env file
-ENV=t5
-BROWSER=chromium
-HEADED=false
-PARALLEL=5
-TIMEOUT=60000
-CI=true
-```
-
-**Example 4: Cross-browser Testing**
-```bash
-# For Chromium
-ENV=t3
-BROWSER=chromium
-HEADED=false
-
-# For Firefox
-ENV=t3
-BROWSER=firefox
-HEADED=false
-
-# For WebKit
-ENV=t3
-BROWSER=webkit
-HEADED=false
-```
-
-#### Environment Variable Priority
-
-The framework uses this priority order for configuration:
-
-1. **Command line environment variables** (highest priority)
-2. **`.env` file values**
-3. **Default values in `environment.ts`** (lowest priority)
-
-**Examples:**
-```bash
-# Override .env settings via command line
-ENV=t5 HEADED=true npm test
-
-# Use .env file settings
-npm test
-
-# Mix command line and .env
-BROWSER=firefox npm run test:smoke:t3
-```
-
-### 4. Run Tests
-
-```bash
-# Run basic smoke test (recommended first test)
-npm run test:headless -- --tags "@basic"
-
-# Run all smoke tests
-npm run test:smoke:t3
 
 # Run tests in headed mode
 npm run test:headed
 
-# Run specific feature tests
-npm run test:homepage
-```
-
-## 🔧 Recent Updates & Fixes
-
-### ✅ **Latest Improvements (February 2026)**
-
-#### **TypeScript Module Resolution Fixed**
-- ✅ **Resolved import path errors**: Fixed `Cannot find module '../../../src/common/world'` errors
-- ✅ **Updated all step definitions**: Changed relative imports to use TypeScript path mapping (`@common/world`)
-- ✅ **Enhanced tsconfig.json**: Added `transpileOnly: true` for better runtime performance
-- ✅ **Fixed compilation issues**: All TypeScript compilation errors resolved
-
-#### **Framework Stability Improvements**
-- ✅ **Fixed scenarioDuration error**: Resolved `ReferenceError: scenarioDuration is not defined` in After hooks
-- ✅ **Performance measurement**: Implemented simple Date.now() based duration calculation
-- ✅ **Error handling**: Enhanced error handling in hooks and world context
-- ✅ **Type safety**: Improved type definitions across the framework
-
-#### **Testing Enhancements**
-- ✅ **Basic smoke test**: Added framework verification test that always passes
-- ✅ **Gherkin syntax fixes**: Corrected feature file syntax errors
-- ✅ **Step definition cleanup**: Removed duplicate and conflicting step definitions
-- ✅ **Cucumber configuration**: Updated cucumber.js with proper formatter settings
-
-#### **Verification & Quality**
-- ✅ **Installation verification**: Added comprehensive installation check script
-- ✅ **Framework validation**: Tests now run without runtime errors
-- ✅ **Success rate**: Basic smoke test achieves 100% pass rate
-- ✅ **Documentation**: Updated README with latest setup instructions
-
-### 🎯 **Framework Status**
-- **✅ Fully Operational**: All core functionality working
-- **✅ TypeScript Compilation**: No module resolution errors
-- **✅ Test Execution**: Basic tests pass successfully
-- **✅ Browser Automation**: Playwright integration working
-- **✅ Ready for Development**: Framework ready for test creation
-
-### 🔧 **Troubleshooting Common Issues**
-
-#### **TypeScript Module Resolution Errors**
-If you encounter `Cannot find module '../../../src/common/world'` errors:
-
-```bash
-# 1. Verify tsconfig.json has correct path mapping
-cat tsconfig.json | grep -A 10 "paths"
-
-# 2. Check if tsconfig-paths is installed
-npm list tsconfig-paths
-
-# 3. Reinstall dependencies if needed
-rm -rf node_modules package-lock.json
-npm install
-
-# 4. Run basic test to verify fix
-npm run test:headless -- --tags "@basic"
-```
-
-#### **scenarioDuration Errors**
-If you see `ReferenceError: scenarioDuration is not defined`:
-
-```bash
-# This has been fixed in the latest version
-# Update to latest main branch
-git pull origin main
-
-# Verify the fix
-npm run test:headless -- --tags "@basic"
-```
-
-#### **Installation Issues**
-```bash
-# Run the verification script
-node verify-installation.js
-
-# If Playwright browsers are missing
-npx playwright install
-
-# If dependencies are corrupted
-rm -rf node_modules package-lock.json
-npm install
-npx playwright install
-```
-
-#### **Test Execution Issues**
-```bash
-# Check if basic framework works
-npm run test:headless -- --tags "@basic"
-
-# If tests fail, check environment setup
-cp .env.example .env
-# Edit .env with your settings
-
-# Run with debug output
-DEBUG=true npm run test:headless -- --tags "@basic"
-```
-
-## 🎯 Test Execution Commands
-
-### Basic Test Execution
-
-```bash
-# Run all tests (default: headless mode)
-npm test
-
-# Run in headed mode (visible browser)
-npm run test:headed
-
-# Run in headless mode (background, no browser UI)
-npm run test:headless
-```
-
-### 🪟 **Windows Users - Headed Mode**
-
-For Windows users who want to see the browser window during testing:
-
-```bash
-# Windows - headed mode (visible browser)
-npm run test:headed:windows -- --tags "@basic"
-
-# Windows - headless mode (recommended for CI/CD)
-npm run test:headless -- --tags "@basic"
-```
-
-### 🐧 **Linux/Mac Users - Headed Mode**
-
-For Linux/Mac users in headless environments (servers, containers):
-
-```bash
-# Linux/Mac - headed mode with virtual display
-npm run test:headed:linux -- --tags "@basic"
-
-# Or use xvfb-run directly
-xvfb-run npm run test:headed -- --tags "@basic"
-```
-
-### Headless vs Headed Testing
-
-#### Headless Mode (Default)
-Headless mode runs tests in the background without displaying the browser UI, making it faster and suitable for CI/CD pipelines:
-
-```bash
-# Explicit headless mode
-npm run test:headless
-
-# Set headless via environment variable
-HEADED=false npm test
-
-# Headless with specific browser
-BROWSER=firefox HEADED=false npm test
-
-# Headless smoke tests
-npm run test:smoke:t3
-```
-
-**Benefits of Headless Mode:**
-- ⚡ **Faster execution** - No UI rendering overhead
-- 🔧 **CI/CD friendly** - Perfect for automated pipelines
-- 💻 **Resource efficient** - Lower CPU and memory usage
-- 🔄 **Parallel execution** - Better performance with multiple workers
-
-#### Headed Mode (Debugging)
-Headed mode displays the browser UI, useful for debugging and test development:
-
-```bash
-# Explicit headed mode
-npm run test:headed
-
-# Set headed via environment variable
-HEADED=true npm test
-
-# Headed with slow motion for debugging
-HEADED=true SLOW_MO=1000 npm test
-
-# Headed with specific viewport
-HEADED=true VIEWPORT=mobile npm test
-```
-
-**When to Use Headed Mode:**
-- 🐛 **Debugging tests** - Visual inspection of test execution
-- 🔍 **Test development** - Understanding page behavior
-- 📊 **Demo purposes** - Showing test execution to stakeholders
-- 🎯 **Troubleshooting** - Investigating test failures
-
-#### Configuration Examples
-
-```bash
-# Headless with maximum performance
-HEADED=false PARALLEL=5 npm run test:smoke
-
-# Headed with debugging features
-HEADED=true SLOW_MO=500 DEBUG=true npm test
-
-# Headless CI/CD execution
-CI=true HEADED=false npm run test:ci
-
-# Headed cross-browser testing
-HEADED=true BROWSER=firefox npm test
-```
-
-### Environment-Specific Tests
-
-```bash
-# Run tests in T3 environment
-npm run test:smoke:t3
-
-# Run tests in T5 environment
-npm run test:smoke:t5
-```
-
-### Feature-Specific Tests
-
-```bash
-# Homepage functionality tests
-npm run test:homepage
-
-# Search functionality tests
-npm run test:search
-
-# Research section tests
-npm run test:research
-
-# News and media tests
-npm run test:news
-
-# Critical tests only
-npm run test:critical
-```
-
-### Cross-Browser Testing
-
-```bash
-# Run tests in Chromium
+# Run specific application tests
+npm run test:frbsf
+npm run test:app1
+
+# Run API tests
+npm run test:api
+
+# Run tests in different environments
+npm run test:dev
+npm run test:qa
+npm run test:prod
+
+# Run cross-browser tests
 npm run test:chromium
-
-# Run tests in Firefox
 npm run test:firefox
-
-# Run tests in WebKit
 npm run test:webkit
-```
 
-### Responsive Design Testing
-
-```bash
-# Mobile viewport tests
+# Run responsive tests
 npm run test:mobile
-
-# Tablet viewport tests
 npm run test:tablet
-
-# Desktop viewport tests
 npm run test:desktop
 ```
 
-### Advanced Execution
-
+#### Using the test runner script:
 ```bash
-# Parallel execution
-npm run test:parallel
+# Basic usage
+./scripts/run-tests.sh
 
-# Retry failed tests
-npm run test:retry
+# With options
+./scripts/run-tests.sh --env qa --browser firefox --tags '@regression'
+./scripts/run-tests.sh --headed --tags '@smoke or @critical'
+./scripts/run-tests.sh --env prod --tags '@api' --parallel 5
 
-# Custom test runner
-npm run test:runner
+# Get help
+./scripts/run-tests.sh --help
 ```
 
-## 🏗 Framework Architecture
+## 🧪 Test Organization
 
-### Page Object Model
+### Feature Files
+Feature files are organized by application and follow BDD principles:
 
-The framework uses the Page Object Model pattern with a hierarchical structure:
+```gherkin
+@ui @login @smoke
+Feature: User Login Functionality
+  As a user
+  I want to be able to log into the application
+  So that I can access my account
 
-```typescript
-BasePage (Abstract)
-├── HomePage
-├── SearchResultsPage
-├── ResearchInsightsPage
-└── NewsMediaPage
+  @positive @critical
+  Scenario: Successful login with valid credentials
+    Given I am on the login page
+    When I enter valid credentials
+    Then I should be redirected to the dashboard
 ```
 
-### Environment Management
-
-Multi-environment support with configuration for:
-
-- **Application URLs**
-- **Database connections**
-- **Browser settings**
-- **Timeouts and performance thresholds**
-
-### Custom World Context
-
-Cucumber World provides:
-
-- **Browser management**
-- **Page object instances**
-- **Test data storage**
-- **Screenshot and trace capture**
-- **Performance measurement**
-
-## 🧪 Cross-Platform Test Execution
-
-This section provides comprehensive commands for running tests across different operating systems and shells.
-
-### **Basic Test Execution**
-
-#### **Unix/Linux/macOS (Bash/Zsh)**
-```bash
-# Run all tests
-npm test
-
-# Run tests in headed mode (visible browser)
-npm run test:headed
-
-# Run tests in headless mode (background)
-npm run test:headless
-
-# Run smoke tests only
-npm run test:smoke:t3
-
-# Run critical tests
-npm run test:critical
-
-# Run homepage-specific tests
-npm run test:homepage
-```
-
-#### **Windows Command Prompt**
-```cmd
-REM Run all tests
-npm test
-
-REM Run tests in headed mode (visible browser)
-npm run test:headed
-
-REM Run tests in headless mode (background)
-npm run test:headless
-
-REM Run smoke tests only
-npm run test:smoke:t3
-
-REM Run critical tests
-npm run test:critical
-
-REM Run homepage-specific tests
-npm run test:homepage
-```
-
-#### **Windows PowerShell**
-```powershell
-# Run all tests
-npm test
-
-# Run tests in headed mode (visible browser)
-npm run test:headed
-
-# Run tests in headless mode (background)
-npm run test:headless
-
-# Run smoke tests only
-npm run test:smoke:t3
-
-# Run critical tests
-npm run test:critical
-
-# Run homepage-specific tests
-npm run test:homepage
-```
-
-### **Browser-Specific Testing**
-
-#### **Unix/Linux/macOS (Bash/Zsh)**
-```bash
-# Test with Chromium
-npm run test:chromium
-
-# Test with Firefox
-npm run test:firefox
-
-# Test with WebKit (Safari)
-npm run test:webkit
-```
-
-#### **Windows Command Prompt**
-```cmd
-REM Test with Chromium
-npm run test:chromium
-
-REM Test with Firefox
-npm run test:firefox
-
-REM Test with WebKit (Safari)
-npm run test:webkit
-```
-
-#### **Windows PowerShell**
-```powershell
-# Test with Chromium
-npm run test:chromium
-
-# Test with Firefox
-npm run test:firefox
-
-# Test with WebKit (Safari)
-npm run test:webkit
-```
-
-### **Responsive Design Testing**
-
-#### **Unix/Linux/macOS (Bash/Zsh)**
-```bash
-# Test on mobile viewport
-npm run test:mobile
-
-# Test on tablet viewport
-npm run test:tablet
-
-# Test on desktop viewport
-npm run test:desktop
-```
-
-#### **Windows Command Prompt**
-```cmd
-REM Test on mobile viewport
-npm run test:mobile
-
-REM Test on tablet viewport
-npm run test:tablet
-
-REM Test on desktop viewport
-npm run test:desktop
-```
-
-#### **Windows PowerShell**
-```powershell
-# Test on mobile viewport
-npm run test:mobile
-
-# Test on tablet viewport
-npm run test:tablet
-
-# Test on desktop viewport
-npm run test:desktop
-```
-
-### **Advanced Test Execution**
-
-#### **Unix/Linux/macOS (Bash/Zsh)**
-```bash
-# Run tests in parallel (faster execution)
-npm run test:parallel
-
-# Run tests with retry on failure
-npm run test:retry
-
-# Run specific tags
-npm run test:headless -- --tags "@smoke"
-npm run test:headless -- --tags "@critical and @homepage"
-npm run test:headless -- --tags "not @skip"
-
-# Environment-specific testing
-ENV=t3 npm run test:smoke:t3
-ENV=t5 npm run test:smoke:t5
-
-# Custom browser and viewport
-BROWSER=firefox VIEWPORT=mobile npm run test:headless
-```
-
-#### **Windows Command Prompt**
-```cmd
-REM Run tests in parallel (faster execution)
-npm run test:parallel
-
-REM Run tests with retry on failure
-npm run test:retry
-
-REM Run specific tags
-npm run test:headless -- --tags "@smoke"
-npm run test:headless -- --tags "@critical and @homepage"
-npm run test:headless -- --tags "not @skip"
-
-REM Environment-specific testing
-set ENV=t3 && npm run test:smoke:t3
-set ENV=t5 && npm run test:smoke:t5
-
-REM Custom browser and viewport
-set BROWSER=firefox && set VIEWPORT=mobile && npm run test:headless
-```
-
-#### **Windows PowerShell**
-```powershell
-# Run tests in parallel (faster execution)
-npm run test:parallel
-
-# Run tests with retry on failure
-npm run test:retry
-
-# Run specific tags
-npm run test:headless -- --tags "@smoke"
-npm run test:headless -- --tags "@critical and @homepage"
-npm run test:headless -- --tags "not @skip"
-
-# Environment-specific testing
-$env:ENV="t3"; npm run test:smoke:t3
-$env:ENV="t5"; npm run test:smoke:t5
-
-# Custom browser and viewport
-$env:BROWSER="firefox"; $env:VIEWPORT="mobile"; npm run test:headless
-```
-
-### **Report Generation and Viewing**
-
-#### **Unix/Linux/macOS (Bash/Zsh)**
-```bash
-# Clean previous reports
-npm run clean
-
-# Run tests and open reports
-npm run test:headless && npm run report:open
-
-# View reports manually
-open reports/cucumber-report.html        # macOS
-xdg-open reports/cucumber-report.html    # Linux
-```
-
-#### **Windows Command Prompt**
-```cmd
-REM Clean previous reports
-npm run clean
-
-REM Run tests and view reports
-npm run test:headless
-start reports\cucumber-report.html
-```
-
-#### **Windows PowerShell**
-```powershell
-# Clean previous reports
-npm run clean
-
-# Run tests and view reports
-npm run test:headless
-Invoke-Item reports\cucumber-report.html
-
-# Alternative: Open with default browser
-Start-Process reports\cucumber-report.html
-```
-
-### **Development and Debugging**
-
-#### **Unix/Linux/macOS (Bash/Zsh)**
-```bash
-# Run with debug output
-DEBUG=true npm run test:headed
-
-# Run single scenario for debugging
-npm run test:headed -- --tags "@debug"
-
-# Type checking
-npm run type-check
-
-# Linting and formatting
-npm run lint
-npm run lint:fix
-npm run format
-```
-
-#### **Windows Command Prompt**
-```cmd
-REM Run with debug output
-set DEBUG=true && npm run test:headed
-
-REM Run single scenario for debugging
-npm run test:headed -- --tags "@debug"
-
-REM Type checking
-npm run type-check
-
-REM Linting and formatting
-npm run lint
-npm run lint:fix
-npm run format
-```
-
-#### **Windows PowerShell**
-```powershell
-# Run with debug output
-$env:DEBUG="true"; npm run test:headed
-
-# Run single scenario for debugging
-npm run test:headed -- --tags "@debug"
-
-# Type checking
-npm run type-check
-
-# Linting and formatting
-npm run lint
-npm run lint:fix
-npm run format
-```
-
-### **Troubleshooting Common Issues**
-
-#### **Unix/Linux/macOS (Bash/Zsh)**
-```bash
-# Clear node modules and reinstall
-rm -rf node_modules package-lock.json
-npm install
-
-# Reinstall browsers
-npx playwright install
-
-# Check system dependencies (Linux)
-npx playwright install-deps
-
-# Verify installation
-node verify-installation.js
-```
-
-#### **Windows Command Prompt**
-```cmd
-REM Clear node modules and reinstall
-rmdir /s /q node_modules
-del package-lock.json
-npm install
-
-REM Reinstall browsers
-npx playwright install
-
-REM Verify installation
-node verify-installation.js
-```
-
-#### **Windows PowerShell**
-```powershell
-# Clear node modules and reinstall
-Remove-Item -Recurse -Force node_modules
-Remove-Item package-lock.json
-npm install
-
-# Reinstall browsers
-npx playwright install
-
-# Verify installation
-node verify-installation.js
-```
-
-## 📊 Test Scenarios Coverage
-
-### 1. Homepage Functionality (15+ scenarios)
-- Page loading and performance
-- Navigation menu functionality
-- Search functionality
-- Federal Reserve branding
-- Content sections validation
-- Footer and social media links
-- Responsive design testing
-- Accessibility compliance
-
-### 2. Search Functionality (17+ scenarios)
-- Basic and advanced search
-- Search results validation
-- Filtering and sorting
-- Pagination
-- Performance testing
-- Mobile search experience
-- Search suggestions and autocomplete
-
-### 3. Research & Insights (18+ scenarios)
-- Research content accessibility
-- Publication types (Working Papers, Economic Letters)
-- Filtering and categorization
-- Author information and citations
-- Newsletter subscription
-- Social sharing capabilities
-- Mobile optimization
-
-### 4. News & Media (22+ scenarios)
-- News content organization
-- Press releases and speeches
-- Media contacts and events
-- Content freshness validation
-- RSS feeds and subscriptions
-- Archive accessibility
-- Performance and accessibility
-
-### 5. Responsive Design (18+ scenarios)
-- Cross-viewport compatibility
-- Touch interactions
-- Device orientation handling
-- Performance across devices
-- Progressive enhancement
-- Offline functionality
-
-### 6. Performance Testing (20+ scenarios)
-- Page load time validation
-- Resource optimization
-- Core Web Vitals measurement
-- Mobile performance
-- Caching effectiveness
-- Third-party integration impact
+### Tags
+The framework uses a comprehensive tagging strategy:
+
+- **Test Types**: `@ui`, `@api`, `@integration`, `@e2e`
+- **Priority**: `@smoke`, `@critical`, `@regression`
+- **Applications**: `@frbsf`, `@app1`
+- **Browsers**: `@cross-browser`
+- **Devices**: `@mobile`, `@tablet`, `@desktop`, `@responsive`
+- **Features**: `@login`, `@homepage`, `@search`
+- **Quality**: `@performance`, `@accessibility`, `@security`
+- **Environment**: `@prod-safe`
 
 ## 🔧 Configuration
 
-### Environment Variables
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `ENV` | Test environment (t3, t5) | t3 |
-| `BROWSER` | Browser type (chromium, firefox, webkit) | chromium |
-| `HEADED` | Run in headed mode | false |
-| `VIEWPORT` | Viewport size (desktop, tablet, mobile) | desktop |
-| `TIMEOUT` | Default timeout in milliseconds | 30000 |
-| `PARALLEL` | Number of parallel workers | 3 |
-| `RETRY` | Number of retry attempts | 2 |
-
-### Browser Configuration
+### Environment Configuration
+The framework supports multiple environments with specific configurations:
 
 ```typescript
-browser: {
-  headless: process.env.HEADED !== 'true',
-  viewport: { width: 1920, height: 1080 },
-  timeout: 30000,
-  slowMo: 0,
-  video: true,
-  screenshot: true
-}
-```
-
-### Environment-Specific Settings
-
-```typescript
-environments: {
-  t3: {
-    baseUrl: 'https://frbsf.org',
-    database: {
-      host: 't3-db-host.example.com',
-      port: 1521,
-      serviceId: 'T3DB'
-    }
-  },
-  t5: {
-    baseUrl: 'https://frbsf.org',
-    database: {
-      host: 't5-db-host.example.com',
-      port: 1521,
-      serviceId: 'T5DB'
-    }
-  }
-}
-```
-
-## 📈 Test Reporting
-
-The framework provides comprehensive test reporting capabilities with multiple formats and automatic generation.
-
-### 🚀 Quick Report Generation
-
-After running any test, reports are automatically generated. To view them:
-
-```bash
-# Run tests (reports are auto-generated)
-npm run test:headless -- --tags "@homepage"
-
-# Open HTML report in browser
-npm run report:open
-
-# Or manually open the report
-open reports/cucumber-report.html  # macOS
-start reports/cucumber-report.html # Windows
-xdg-open reports/cucumber-report.html # Linux
-```
-
-### 📊 Available Report Types
-
-#### 1. **Interactive HTML Report**
-- **Location**: `reports/cucumber-report.html`
-- **Features**: 
-  - ✅ Interactive scenario navigation
-  - 📊 Visual pass/fail statistics
-  - 🖼️ Embedded screenshots
-  - 📹 Video recordings of failures
-  - ⏱️ Execution timing details
-  - 🏷️ Tag-based filtering
-
-```bash
-# Generate and view HTML report
-npm run test:headless -- --tags "@smoke"
-npm run report:open
-```
-
-#### 2. **JSON Report (CI/CD Integration)**
-- **Location**: `reports/cucumber-report.json`
-- **Use Cases**: 
-  - CI/CD pipeline integration
-  - Custom report processing
-  - Test result analysis
-  - Automated notifications
-
-```bash
-# Generate JSON report for CI/CD
-npm run test:ci
-
-# View JSON report content
-cat reports/cucumber-report.json | jq '.'
-```
-
-#### 3. **Test Summary Report**
-- **Location**: `reports/test-summary.json`
-- **Contains**:
-  - Execution summary (duration, environment, browser)
-  - Pass/fail statistics
-  - Success rate percentage
-  - Test configuration details
-
-```bash
-# View test summary
-cat reports/test-summary.json
-
-# Example output:
-{
-  "executionSummary": {
-    "startTime": "2026-02-10T03:03:53.369Z",
-    "endTime": "2026-02-10T03:04:26.122Z",
-    "duration": 32753,
-    "environment": "t3",
-    "baseUrl": "https://frbsf.org",
-    "browser": "chromium",
-    "headless": true,
-    "viewport": { "width": 1920, "height": 1080 }
-  },
-  "results": {
-    "total": 15,
-    "passed": 15,
-    "failed": 0,
-    "skipped": 0,
-    "successRate": "100.00"
-  }
-}
-```
-
-#### 4. **JUnit XML Report (CI/CD)**
-- **Location**: `reports/cucumber-junit.xml`
-- **Use Cases**: Jenkins, Azure DevOps, GitHub Actions
-
-```bash
-# Generate JUnit XML for CI/CD
-npm run test:ci
-```
-
-### 📸 Screenshots and Videos
-
-#### Automatic Capture
-- **Screenshots**: Captured on test failures and key steps
-- **Videos**: Full test execution recordings
-- **Location**: `reports/screenshots/` and `reports/videos/`
-
-```bash
-# Screenshots are automatically captured during test execution
-ls reports/screenshots/
-
-# Videos are recorded for all test scenarios
-ls reports/videos/
-```
-
-#### Manual Screenshot Capture
-```typescript
-// In step definitions
-await this.homePage.takeScreenshot('custom-screenshot-name');
-```
-
-### 🔍 Network and Performance Reports
-
-#### Network HAR Files
-- **Location**: `reports/network.har`
-- **Contains**: All network requests, responses, timing data
-- **View with**: Chrome DevTools, HAR Viewer online tools
-
-#### Performance Logs
-- **Location**: `reports/test-execution.log`
-- **Contains**: Detailed execution logs, performance metrics
-
-### 📋 Report Generation Commands
-
-#### Basic Report Generation
-```bash
-# Run tests and generate all reports
-npm test
-
-# Run specific test suite with reports
-npm run test:homepage
-npm run test:search
-npm run test:performance
-```
-
-#### Advanced Report Options
-```bash
-# Generate reports with custom tags
-npm run test:headless -- --tags "@critical"
-
-# Generate reports for specific environment
-npm run test:smoke:t3
-npm run test:smoke:t5
-
-# Generate reports for cross-browser testing
-npm run test:chromium
-npm run test:firefox
-npm run test:webkit
-```
-
-#### CI/CD Report Generation
-```bash
-# Optimized for CI/CD pipelines
-npm run test:ci
-
-# Parallel execution with reports
-npm run test:parallel
-
-# Retry failed tests with reports
-npm run test:retry
-```
-
-### 🛠️ Report Customization
-
-#### Custom HTML Report Generation
-The framework uses `cucumber-html-reporter` and `multiple-cucumber-html-reporter` for enhanced reporting:
-
-```javascript
-// Custom report generation script (if needed)
-const reporter = require('cucumber-html-reporter');
-
-const options = {
-  theme: 'bootstrap',
-  jsonFile: 'reports/cucumber-report.json',
-  output: 'reports/custom-report.html',
-  reportSuiteAsScenarios: true,
-  scenarioTimestamp: true,
-  launchReport: true,
-  metadata: {
-    "App Version": "1.0.0",
-    "Test Environment": "T3",
-    "Browser": "Chrome",
-    "Platform": "Linux",
-    "Parallel": "Scenarios",
-    "Executed": "Remote"
-  }
+// config/env/dev.env.ts
+export const devConfig = {
+  environment: 'dev',
+  baseUrl: 'https://dev.frbsf.org',
+  apiUrl: 'https://api-dev.frbsf.org',
+  // ... other settings
 };
-
-reporter.generate(options);
 ```
 
-### 📊 Report Analysis
+### Playwright Configuration
+Multi-browser support with comprehensive settings:
 
-#### Success Rate Tracking
+```typescript
+// playwright.config.ts
+export default defineConfig({
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+    { name: 'mobile', use: { ...devices['Pixel 5'] } },
+  ],
+  // ... other configurations
+});
+```
+
+### Cucumber Configuration
+Profile-based test execution:
+
+```typescript
+// cucumber.config.ts
+profiles: {
+  smoke: { tags: '@smoke', parallel: 3, retry: 1 },
+  regression: { tags: 'not @skip', parallel: 5, retry: 2 },
+  api: { tags: '@api', parallel: 5, retry: 2 },
+  // ... other profiles
+}
+```
+
+## 📊 Reporting
+
+The framework generates multiple types of reports:
+
+### HTML Reports
 ```bash
-# Check current success rate
-grep -o '"successRate": "[^"]*"' reports/test-summary.json
-
-# View detailed results
-jq '.results' reports/test-summary.json
+npm run report:html
 ```
+- Location: `reports/cucumber-html/index.html`
+- Features: Interactive HTML report with screenshots and videos
 
-#### Performance Analysis
+### Allure Reports
 ```bash
-# Check test execution duration
-jq '.executionSummary.duration' reports/test-summary.json
-
-# View environment configuration
-jq '.executionSummary' reports/test-summary.json
+npm run report:allure
 ```
+- Location: `reports/allure-html/index.html`
+- Features: Advanced reporting with trends, history, and analytics
 
-#### Failure Analysis
+### JSON Reports
+- Location: `reports/cucumber-report.json`
+- Usage: For CI/CD integration and custom reporting
+
+## 🔐 Security & Credentials
+
+### Credential Management
+- Test credentials are stored in `credentials/users.json`
+- Service account credentials in `credentials/serviceAccounts.json`
+- **Never commit real credentials to version control**
+
+### SSL Certificates
+- Client certificates stored in `certs/` directory
+- Configured automatically in Playwright
+- See `certs/README.md` for setup instructions
+
+### Environment Variables
+Sensitive data is managed through environment variables:
 ```bash
-# View failed scenarios (if any)
-jq '.results.failed' reports/test-summary.json
-
-# Check error logs
-tail -n 50 reports/error.log
+# .env file
+API_TOKEN=your_api_token_here
+CLIENT_CERT_PASSPHRASE=your_passphrase
+DB_PASSWORD=your_db_password
 ```
 
-### 🔧 Report Cleanup
+## 🏗️ Core Components
 
-```bash
-# Clean all reports
-npm run clean
-
-# Manual cleanup
-rm -rf reports/*
-rm -rf test-results/*
+### CustomWorld
+Central context for test execution:
+```typescript
+export interface ICustomWorld extends World {
+  browser?: Browser;
+  context?: BrowserContext;
+  page?: Page;
+  config: EnvironmentConfig;
+  logger: Logger;
+  // ... other properties
+}
 ```
 
-### 📈 Continuous Integration Integration
+### BasePage
+Common page operations:
+```typescript
+export abstract class BasePage {
+  async clickElement(selector: string): Promise<void>
+  async typeText(selector: string, text: string): Promise<void>
+  async waitForElement(selector: string): Promise<Locator>
+  // ... other methods
+}
+```
 
-#### GitHub Actions
+### BaseAPI
+API testing foundation:
+```typescript
+export abstract class BaseAPI {
+  async get(endpoint: string): Promise<ApiResponse>
+  async post(endpoint: string, data?: any): Promise<ApiResponse>
+  async validateStatus(response: ApiResponse, expectedStatus: number): void
+  // ... other methods
+}
+```
+
+## 🧪 Writing Tests
+
+### Page Object Model
+```typescript
+export class LoginPage extends BasePage {
+  private readonly usernameInput = '#username';
+  private readonly passwordInput = '#password';
+  private readonly loginButton = '#login-btn';
+
+  async login(username: string, password: string): Promise<void> {
+    await this.typeText(this.usernameInput, username);
+    await this.typeText(this.passwordInput, password);
+    await this.clickElement(this.loginButton);
+  }
+}
+```
+
+### Step Definitions
+```typescript
+Given('I am on the login page', async function (this: ICustomWorld) {
+  const loginPage = new LoginPage(this.page!, this.logger);
+  await loginPage.navigateTo('/login');
+});
+
+When('I enter valid credentials', async function (this: ICustomWorld) {
+  const loginPage = new LoginPage(this.page!, this.logger);
+  await loginPage.login('testuser', 'password123');
+});
+```
+
+### API Testing
+```typescript
+When('I send a GET request to {string}', async function (endpoint: string) {
+  const apiClient = new UserApiClient(this.logger);
+  const response = await apiClient.get(endpoint);
+  this.setTestData('apiResponse', response);
+});
+
+Then('the response status should be {int}', function (expectedStatus: number) {
+  const response = this.getTestData('apiResponse');
+  expect(response.status).toBe(expectedStatus);
+});
+```
+
+## 🔄 CI/CD Integration
+
+### GitHub Actions
 ```yaml
 - name: Run Tests
-  run: npm run test:ci
+  run: |
+    npm run ci:smoke
+    npm run report:allure
 
-- name: Upload Test Reports
+- name: Upload Reports
   uses: actions/upload-artifact@v3
-  if: always()
   with:
     name: test-reports
-    path: |
-      reports/
-      test-results/
-
-- name: Publish Test Results
-  uses: dorny/test-reporter@v1
-  if: always()
-  with:
-    name: Test Results
-    path: reports/cucumber-junit.xml
-    reporter: java-junit
+    path: reports/
 ```
 
-#### Jenkins Pipeline
-```groovy
-post {
-    always {
-        publishHTML([
-            allowMissing: false,
-            alwaysLinkToLastBuild: true,
-            keepAll: true,
-            reportDir: 'reports',
-            reportFiles: 'cucumber-report.html',
-            reportName: 'Cucumber Test Report'
-        ])
-        
-        publishTestResults testResultsPattern: 'reports/cucumber-junit.xml'
-    }
-}
-```
-
-### 🎯 Report Best Practices
-
-1. **Always generate reports** - Reports are automatically created with every test run
-2. **Review HTML reports** - Use interactive features for detailed analysis
-3. **Monitor success rates** - Track trends over time using test-summary.json
-4. **Archive reports** - Keep historical reports for trend analysis
-5. **Use CI/CD integration** - Automate report publishing in pipelines
-6. **Clean old reports** - Use `npm run clean` to manage disk space
-
-## 🔍 Debugging
+## 🐛 Debugging
 
 ### Debug Mode
-
 ```bash
-# Run with debug logging
-DEBUG=true npm test
-
-# Run with verbose output
-VERBOSE=true npm test
-
-# Run specific scenario with debugging
-npm test -- --tags "@debug"
+npm run debug
+# or
+DEBUG=true HEADED=true npm test -- --tags @debug
 ```
 
-### Headless Testing Best Practices
+### Screenshots and Videos
+- Automatic screenshots on failure
+- Video recording for failed tests
+- Traces for detailed debugging
 
-#### Optimal Headless Configuration
-
-```bash
-# Production-ready headless setup
-HEADED=false PARALLEL=3 TIMEOUT=30000 npm run test:smoke
-
-# Fast headless execution for CI
-CI=true HEADED=false PARALLEL=5 npm run test:ci
-
-# Headless with performance monitoring
-HEADED=false DEBUG=false VERBOSE=false npm run test:performance
+### Logging
+```typescript
+this.logger.info('Test step executed');
+this.logger.error('Test failed', error);
+this.logger.performance('Page load time', 1500, 'ms');
 ```
 
-#### Headless Troubleshooting
+## 📈 Performance Testing
 
-**Common Headless Issues and Solutions:**
-
-1. **Tests pass in headed but fail in headless mode:**
-   ```bash
-   # Add explicit waits for dynamic content
-   HEADED=false TIMEOUT=60000 npm test
-   
-   # Enable screenshots for debugging
-   HEADED=false npm test  # Screenshots auto-captured on failure
-   ```
-
-2. **Slow performance in headless mode:**
-   ```bash
-   # Optimize parallel execution
-   HEADED=false PARALLEL=3 npm test
-   
-   # Disable unnecessary features
-   HEADED=false VIDEO=false npm test
-   ```
-
-3. **Font rendering issues in headless:**
-   ```bash
-   # Install system fonts (Linux)
-   sudo apt-get install fonts-liberation fonts-dejavu-core
-   
-   # Run with font fallbacks
-   HEADED=false npm test
-   ```
-
-4. **Memory issues with long-running headless tests:**
-   ```bash
-   # Limit parallel workers
-   HEADED=false PARALLEL=2 npm test
-   
-   # Enable garbage collection
-   NODE_OPTIONS="--max-old-space-size=4096" HEADED=false npm test
-   ```
-
-#### Headless vs Headed Comparison
-
-| Aspect | Headless Mode | Headed Mode |
-|--------|---------------|-------------|
-| **Speed** | ⚡ Faster (2-3x) | 🐌 Slower |
-| **Resources** | 💚 Low CPU/Memory | 🔴 High CPU/Memory |
-| **CI/CD** | ✅ Perfect | ❌ Not suitable |
-| **Debugging** | ❌ Limited visibility | ✅ Full visibility |
-| **Parallel** | ✅ Excellent | ⚠️ Limited |
-| **Stability** | ✅ More stable | ⚠️ UI dependent |
-
-#### Headless Testing Strategies
-
-```bash
-# Development workflow
-HEADED=true npm run test:homepage  # Debug new tests
-HEADED=false npm run test:smoke    # Quick validation
-
-# CI/CD pipeline
-HEADED=false PARALLEL=5 npm run test:ci
-
-# Performance testing
-HEADED=false npm run test:performance
-
-# Cross-browser headless
-BROWSER=chromium HEADED=false npm test
-BROWSER=firefox HEADED=false npm test
-BROWSER=webkit HEADED=false npm test
-```
-
-### Screenshot Capture
-
-Screenshots are automatically captured:
-- On test failures
-- At specific test steps
-- On demand via API
-
-### Trace Files
-
-Playwright traces for detailed debugging:
-- Automatically generated for failed tests
-- Include network activity, console logs, and DOM snapshots
-
-## 🚀 CI/CD Integration
-
-### GitHub Actions Example
-
-```yaml
-name: E2E Tests
-on: [push, pull_request]
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - run: npm ci
-      - run: npx playwright install --with-deps
-      - run: npm run test:ci
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: test-results
-          path: reports/
-```
-
-### Jenkins Pipeline
-
-```groovy
-pipeline {
-    agent any
-    stages {
-        stage('Install') {
-            steps {
-                sh 'npm ci'
-                sh 'npx playwright install --with-deps'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'npm run test:ci'
-            }
-        }
-    }
-    post {
-        always {
-            publishHTML([
-                allowMissing: false,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: 'reports',
-                reportFiles: 'cucumber-report.html',
-                reportName: 'Test Report'
-            ])
-        }
-    }
-}
-```
-
-## 🛡 Best Practices
-
-### Test Writing Guidelines
-
-1. **Use descriptive scenario names**
-2. **Follow Given-When-Then structure**
-3. **Keep scenarios focused and atomic**
-4. **Use appropriate tags for organization**
-5. **Implement proper error handling**
-
-### Page Object Guidelines
-
-1. **Encapsulate page-specific logic**
-2. **Use meaningful selector strategies**
-3. **Implement proper waiting mechanisms**
-4. **Provide clear method names**
-5. **Handle dynamic content appropriately**
-
-### Performance Guidelines
-
-1. **Set appropriate timeouts**
-2. **Use efficient selectors**
-3. **Minimize unnecessary waits**
-4. **Implement proper resource cleanup**
-5. **Monitor test execution times**
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-#### Browser Launch Failures
-```bash
-# Install system dependencies
-npx playwright install-deps
-
-# Clear browser cache
-rm -rf ~/.cache/ms-playwright
-npx playwright install
-```
-
-#### TypeScript Compilation Errors
-```bash
-# Clean and rebuild
-npm run clean
-npm run type-check
-```
-
-#### Test Timeouts
-```bash
-# Increase timeout
-TIMEOUT=60000 npm test
-
-# Run in headed mode for debugging
-HEADED=true npm test
-```
-
-### Debug Commands
-
-```bash
-# Check browser installation
-npx playwright install --dry-run
-
-# Validate configuration
-npm run type-check
-
-# Test specific browser
-BROWSER=firefox npm test
-
-# Run with maximum logging
-DEBUG=* VERBOSE=true npm test
-```
-
-### Common Installation Issues
-
-#### Issue 1: "Cannot find module 'tsconfig-paths/register'"
-
-**Error:**
-```
-error: Cannot find module 'tsconfig-paths/register'
-```
-
-**Solution:**
-```bash
-# Install missing dependency
-npm install --save-dev tsconfig-paths
-
-# Or reinstall all dependencies
-rm -rf node_modules package-lock.json
-npm install
-```
-
-#### Issue 2: Node.js Version Warning
-
-**Warning:**
-```
-This node.js version (V24.8.0) has not been tested with this version of cucumber
-```
-
-**Solution:**
-This is just a warning and can be safely ignored. The framework works with Node.js 18+ including version 24.x.
-
-#### Issue 3: "'publishquiet' option is no longer needed"
-
-**Warning:**
-```
-'publishquiet' option is no longer needed, you can remove it from your configuration
-```
-
-**Solution:**
-This warning has been fixed in the latest version. If you still see it, update your cucumber.js configuration by removing the `--publish-quiet` option.
-
-#### Issue 4: TypeScript Path Mapping Issues
-
-**Error:**
-```
-Cannot resolve module '@/config/environment'
-```
-
-**Solution:**
-Ensure your tsconfig.json includes the ts-node configuration:
-```json
-{
-  "ts-node": {
-    "require": ["tsconfig-paths/register"],
-    "compilerOptions": {
-      "module": "commonjs"
-    }
-  }
-}
-```
-
-#### Issue 5: Playwright Browsers Not Installed
-
-**Error:**
-```
-browserType.launch: Executable doesn't exist
-```
-
-**Solution:**
-```bash
-# Install Playwright browsers
-npx playwright install
-
-# Install with system dependencies (Linux)
-npx playwright install --with-deps
-
-# For specific browser only
-npx playwright install chromium
-```
-
-#### Issue 6: Permission Issues (Linux/Mac)
-
-**Error:**
-```
-EACCES: permission denied
-```
-
-**Solution:**
-```bash
-# Fix npm permissions
-sudo chown -R $(whoami) ~/.npm
-sudo chown -R $(whoami) /usr/local/lib/node_modules
-
-# Or use npm prefix
-npm config set prefix ~/.npm-global
-export PATH=~/.npm-global/bin:$PATH
-```
-
-### Quick Fix Commands
-
-```bash
-# Complete reinstall
-rm -rf node_modules package-lock.json
-npm install
-npx playwright install
-
-# Fix TypeScript issues
-npm run type-check
-npm install --save-dev tsconfig-paths
-
-# Verify installation
-npm test -- --dry-run
-```
-
-## 🔧 Development and Maintenance
-
-### Code Quality Tools
-
-The framework includes several code quality tools to maintain high standards:
-
-```bash
-# Lint TypeScript code
-npm run lint
-
-# Auto-fix linting issues
-npm run lint:fix
-
-# Format code with Prettier
-npm run format
-
-# Type checking without compilation
-npm run type-check
-
-# Clean reports and artifacts
-npm run clean
-```
-
-### Adding New Tests
-
-#### 1. Create Feature File
+### Performance Tags
 ```gherkin
-# tests/apps/frbsf/features/new-feature.feature
-@smoke @new-feature
-Feature: New Feature Testing
-  As a user
-  I want to test new functionality
-  So that I can ensure it works correctly
-
-  Scenario: Test new feature
-    Given I am on the homepage
-    When I interact with the new feature
-    Then I should see the expected result
+@performance
+Scenario: Page load performance
+  When I navigate to the homepage
+  Then the page should load within 3 seconds
 ```
 
-#### 2. Create Step Definitions
+## ♿ Accessibility Testing
+
+### Accessibility Tags
+```gherkin
+@accessibility
+Scenario: Login form accessibility
+  Given I am on the login page
+  Then the form should be accessible
+```
+
+## 🔒 Security Testing
+
+### Security Tags
+```gherkin
+@security
+Scenario: SQL injection protection
+  When I attempt SQL injection in the search field
+  Then the application should reject the input
+```
+
+## 📱 Mobile Testing
+
+### Mobile Configuration
 ```typescript
-// tests/apps/frbsf/steps/new-feature-steps.ts
-import { Given, When, Then } from '@cucumber/cucumber';
-import { CustomWorld } from '@common/world';
-
-Given('I am on the homepage', async function (this: CustomWorld) {
-  await this.homePage.navigate();
-});
-
-When('I interact with the new feature', async function (this: CustomWorld) {
-  // Implementation here
-});
-
-Then('I should see the expected result', async function (this: CustomWorld) {
-  // Assertions here
-});
+// Mobile viewport testing
+test:mobile: "VIEWPORT=mobile cucumber-js --tags '@mobile'"
 ```
 
-#### 3. Update Page Objects (if needed)
-```typescript
-// tests/apps/frbsf/pages/new-page.ts
-import { BasePage } from '@pages/base-page';
-import { Page } from 'playwright';
+## 🤝 Contributing
 
-export class NewPage extends BasePage {
-  constructor(page: Page) {
-    super(page);
-  }
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/new-feature`
+3. Make your changes following the coding standards
+4. Run tests: `npm run validate`
+5. Commit your changes: `git commit -m 'Add new feature'`
+6. Push to the branch: `git push origin feature/new-feature`
+7. Submit a pull request
 
-  async newMethod(): Promise<void> {
-    // Implementation
-  }
-}
-```
+### Coding Standards
+- Use TypeScript strict mode
+- Follow ESLint and Prettier configurations
+- Write comprehensive tests
+- Document new features
+- Use meaningful commit messages
 
-### Environment Variables Reference
-
-Complete list of available environment variables:
-
-| Variable | Description | Default | Options |
-|----------|-------------|---------|---------|
-| `ENV` | Test environment | `t3` | `t3`, `t5` |
-| `BROWSER` | Browser type | `chromium` | `chromium`, `firefox`, `webkit` |
-| `HEADED` | Show browser UI | `false` | `true`, `false` |
-| `VIEWPORT` | Screen size | `desktop` | `desktop`, `tablet`, `mobile` |
-| `TIMEOUT` | Default timeout (ms) | `30000` | Any number |
-| `SLOW_MO` | Slow motion delay (ms) | `0` | Any number |
-| `PARALLEL` | Parallel workers | `3` | Any number |
-| `RETRY` | Retry attempts | `2` | Any number |
-| `TAGS` | Cucumber tags | `@smoke` | Any valid tags |
-| `DEBUG` | Debug mode | `false` | `true`, `false` |
-| `VERBOSE` | Verbose logging | `false` | `true`, `false` |
-| `CI` | CI/CD mode | `false` | `true`, `false` |
-| `REPORT_PATH` | Report directory | `./reports` | Any path |
-| `SCREENSHOT_PATH` | Screenshot directory | `./reports/screenshots` | Any path |
-| `VIDEO_PATH` | Video directory | `./reports/videos` | Any path |
-
-### Test Tags Reference
-
-Available tags for test organization:
-
-#### Functional Tags
-- `@smoke` - Critical smoke tests
-- `@critical` - High-priority tests
-- `@regression` - Full regression suite
-- `@basic` - Basic functionality tests
-
-#### Feature Tags
-- `@homepage` - Homepage functionality
-- `@search` - Search functionality
-- `@navigation` - Navigation tests
-- `@dropdown` - Dropdown functionality
-- `@quick-links` - Quick links tests
-
-#### Technical Tags
-- `@performance` - Performance tests
-- `@accessibility` - Accessibility tests
-- `@responsive` - Responsive design tests
-- `@mobile` - Mobile-specific tests
-- `@tablet` - Tablet-specific tests
-- `@desktop` - Desktop-specific tests
-
-#### Browser Tags
-- `@chromium-only` - Chromium-specific tests
-- `@firefox-only` - Firefox-specific tests
-- `@webkit-only` - WebKit-specific tests
-- `@cross-browser` - Cross-browser tests
-
-#### Environment Tags
-- `@t3-only` - T3 environment only
-- `@t5-only` - T5 environment only
-
-#### Control Tags
-- `@skip` - Skip these tests
-- `@wip` - Work in progress
-- `@manual` - Manual tests (documentation)
-
-### Performance Optimization
-
-#### Test Execution Optimization
-```bash
-# Parallel execution for faster results
-npm run test:parallel
-
-# Headless mode for CI/CD
-npm run test:headless
-
-# Specific tag execution
-npm run test:headless -- --tags "@smoke"
-
-# Single scenario execution
-npm run test:headless -- --name "Homepage loads successfully"
-```
-
-#### Browser Optimization
-```typescript
-// Optimized browser configuration
-const browserConfig = {
-  headless: true,
-  args: [
-    '--no-sandbox',
-    '--disable-dev-shm-usage',
-    '--disable-gpu',
-    '--disable-web-security'
-  ]
-};
-```
-
-### Security Considerations
-
-#### Sensitive Data Handling
-- Never commit `.env` files with real credentials
-- Use environment variables for sensitive data
-- Rotate test credentials regularly
-- Use separate test accounts for automation
-
-#### Best Practices
-```bash
-# Always use .env.example as template
-cp .env.example .env
-
-# Never commit actual .env file
-echo ".env" >> .gitignore
-
-# Use secure credential storage in CI/CD
-# GitHub Secrets, Jenkins Credentials, etc.
-```
-
-## 🚀 Advanced Usage
-
-### Custom Test Runner
-
-The framework includes a custom test runner for advanced scenarios:
-
-```bash
-# Use custom test runner
-npm run test:runner
-
-# Custom runner with options
-ts-node src/utils/test-runner.ts --env t3 --browser firefox --tags @critical
-```
-
-### Database Testing (Optional)
-
-If database testing is needed:
-
-```typescript
-// Example database test
-import { DatabaseUtils } from '@database/database-utils';
-
-const db = new DatabaseUtils();
-await db.connect();
-const result = await db.query('SELECT * FROM test_table');
-await db.disconnect();
-```
-
-### API Testing Integration
-
-```typescript
-// Example API test integration
-import { APIUtils } from '@utils/api-utils';
-
-const api = new APIUtils();
-const response = await api.get('/api/endpoint');
-expect(response.status).toBe(200);
-```
-
-### Visual Testing
-
-```typescript
-// Example visual comparison
-await this.page.screenshot({ path: 'baseline.png' });
-// Compare with baseline in CI/CD
-```
-
-## 📊 Metrics and Analytics
-
-### Test Metrics Tracking
-
-The framework automatically tracks:
-- **Execution time** per scenario
-- **Success/failure rates** over time
-- **Performance metrics** (page load times)
-- **Browser compatibility** results
-- **Flaky test detection**
-
-### Viewing Metrics
-
-```bash
-# View current test summary
-cat reports/test-summary.json | jq '.'
-
-# Check success rate trend
-grep "successRate" reports/test-summary-*.json
-
-# Performance analysis
-grep "duration" reports/test-execution.log
-```
-
-## 🔄 Continuous Integration Examples
-
-### GitHub Actions (Complete)
-
-```yaml
-name: E2E Tests
-
-on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main ]
-  schedule:
-    - cron: '0 2 * * *'  # Daily at 2 AM
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        browser: [chromium, firefox, webkit]
-        
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-        cache: 'npm'
-        
-    - name: Install dependencies
-      run: |
-        npm ci
-        npx playwright install
-        
-    - name: Run tests
-      run: |
-        npm run test:headless -- --tags "@smoke"
-      env:
-        BROWSER: ${{ matrix.browser }}
-        CI: true
-        
-    - name: Upload test results
-      uses: actions/upload-artifact@v3
-      if: always()
-      with:
-        name: test-results-${{ matrix.browser }}
-        path: |
-          reports/
-          test-results/
-          
-    - name: Publish test report
-      uses: dorny/test-reporter@v1
-      if: always()
-      with:
-        name: Test Results (${{ matrix.browser }})
-        path: reports/cucumber-junit.xml
-        reporter: java-junit
-```
-
-### Jenkins Pipeline (Complete)
-
-```groovy
-pipeline {
-    agent any
-    
-    parameters {
-        choice(
-            name: 'BROWSER',
-            choices: ['chromium', 'firefox', 'webkit'],
-            description: 'Browser to run tests'
-        )
-        choice(
-            name: 'ENVIRONMENT',
-            choices: ['t3', 't5'],
-            description: 'Test environment'
-        )
-        string(
-            name: 'TAGS',
-            defaultValue: '@smoke',
-            description: 'Test tags to run'
-        )
-    }
-    
-    environment {
-        NODE_VERSION = '18'
-        BROWSER = "${params.BROWSER}"
-        ENV = "${params.ENVIRONMENT}"
-        TAGS = "${params.TAGS}"
-        CI = 'true'
-    }
-    
-    stages {
-        stage('Setup') {
-            steps {
-                sh 'npm ci'
-                sh 'npx playwright install'
-            }
-        }
-        
-        stage('Lint') {
-            steps {
-                sh 'npm run lint'
-                sh 'npm run type-check'
-            }
-        }
-        
-        stage('Test') {
-            steps {
-                sh "npm run test:headless -- --tags '${TAGS}'"
-            }
-            post {
-                always {
-                    publishHTML([
-                        allowMissing: false,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: 'reports',
-                        reportFiles: 'cucumber-report.html',
-                        reportName: 'Test Report'
-                    ])
-                    
-                    publishTestResults testResultsPattern: 'reports/cucumber-junit.xml'
-                    
-                    archiveArtifacts artifacts: 'reports/**/*', fingerprint: true
-                }
-            }
-        }
-    }
-    
-    post {
-        always {
-            cleanWs()
-        }
-        failure {
-            emailext (
-                subject: "Test Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER}",
-                body: "Test execution failed. Check the report: ${env.BUILD_URL}",
-                to: "${env.CHANGE_AUTHOR_EMAIL}"
-            )
-        }
-    }
-}
-```
-
-## 📚 Additional Resources
-
-### Documentation Links
+## 📚 Documentation
 
 - [Playwright Documentation](https://playwright.dev/)
 - [Cucumber.js Documentation](https://cucumber.io/docs/cucumber/)
 - [TypeScript Documentation](https://www.typescriptlang.org/docs/)
-- [Gherkin Syntax Reference](https://cucumber.io/docs/gherkin/)
-- [Page Object Model Pattern](https://playwright.dev/docs/pom)
 
-### Framework Extensions
+## 🆘 Troubleshooting
 
-- **Database Testing**: SQL utilities in `src/database/`
-- **API Testing**: REST API validation capabilities
-- **Visual Testing**: Screenshot comparison features
-- **Accessibility Testing**: WCAG compliance validation
-- **Performance Testing**: Core Web Vitals monitoring
-- **Mobile Testing**: Device emulation and touch interactions
+### Common Issues
 
-### Community and Support
+1. **Browser not found**
+   ```bash
+   npx playwright install
+   ```
 
-- **GitHub Issues**: [Report bugs and feature requests](https://github.com/srinivasareddy76/My_Playwright-TypeScript-Cucumber/issues)
-- **Pull Requests**: [Contribute improvements](https://github.com/srinivasareddy76/My_Playwright-TypeScript-Cucumber/pulls)
-- **Discussions**: [Community discussions and Q&A](https://github.com/srinivasareddy76/My_Playwright-TypeScript-Cucumber/discussions)
-- **Wiki**: [Additional documentation and guides](https://github.com/srinivasareddy76/My_Playwright-TypeScript-Cucumber/wiki)
+2. **TypeScript compilation errors**
+   ```bash
+   npm run type-check
+   ```
 
-### Learning Resources
+3. **Test failures**
+   - Check logs in `reports/test-execution.log`
+   - Review screenshots in `reports/screenshots/`
+   - Examine traces in `reports/traces/`
 
-- **BDD Testing**: [Behavior-Driven Development Guide](https://cucumber.io/docs/bdd/)
-- **Test Automation**: [Best practices and patterns](https://testautomationu.applitools.com/)
-- **Playwright Training**: [Official Playwright courses](https://playwright.dev/docs/intro)
-- **TypeScript Learning**: [TypeScript handbook](https://www.typescriptlang.org/docs/handbook/)
+4. **Permission denied on scripts**
+   ```bash
+   chmod +x scripts/*.sh
+   ```
+
+### Getting Help
+
+- Check the [Issues](https://github.com/srinivasareddy76/My_Playwright-TypeScript-Cucumber/issues) page
+- Review the troubleshooting section in individual component READMEs
+- Run tests with `--verbose` flag for detailed output
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👥 Contributors
+## 🙏 Acknowledgments
 
-### Core Team
-- **Test Automation Engineers** - Framework development and maintenance
-- **Quality Assurance Engineers** - Test scenario creation and validation  
-- **DevOps Engineers** - CI/CD integration and deployment
-- **Frontend Developers** - Page object model updates
-
-### Contributing Guidelines
-
-1. **Fork the repository**
-2. **Create a feature branch** (`git checkout -b feature/amazing-feature`)
-3. **Commit your changes** (`git commit -m 'Add amazing feature'`)
-4. **Push to the branch** (`git push origin feature/amazing-feature`)
-5. **Open a Pull Request**
-
-### Code of Conduct
-
-Please read our [Code of Conduct](CODE_OF_CONDUCT.md) before contributing.
-
-## 🏆 Achievements
-
-- ✅ **100% Test Success Rate** - All scenarios passing
-- ✅ **Production Ready** - Deployed and stable
-- ✅ **Comprehensive Coverage** - 15 test scenarios, 113 steps
-- ✅ **Multi-Browser Support** - Chromium, Firefox, WebKit
-- ✅ **Responsive Testing** - Desktop, tablet, mobile
-- ✅ **Performance Monitoring** - Core Web Vitals tracking
-- ✅ **Accessibility Compliance** - WCAG validation
-- ✅ **CI/CD Integration** - GitHub Actions, Jenkins ready
-
----
-
-## 🎯 Quick Reference
-
-### Essential Commands
-```bash
-# Setup
-npm install && npx playwright install
-
-# Run all tests
-npm run test:headless -- --tags "@homepage"
-
-# View reports
-npm run report:open
-
-# Clean artifacts
-npm run clean
-```
-
-## 🪟 Windows-Specific Tips and Troubleshooting
-
-### **PowerShell Execution Policy**
-If you encounter execution policy errors in PowerShell:
-
-```powershell
-# Check current execution policy
-Get-ExecutionPolicy
-
-# Set execution policy for current user (recommended)
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-
-# Alternative: Set for current session only
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
-```
-
-### **Path Issues**
-```powershell
-# Add Node.js to PATH if not automatically added
-$env:PATH += ";C:\Program Files\nodejs"
-
-# Verify Node.js is in PATH
-node --version
-npm --version
-
-# Refresh environment variables
-refreshenv  # If using Chocolatey
-```
-
-### **Long Path Support (Windows 10/11)**
-Enable long path support for deep node_modules:
-
-```powershell
-# Run as Administrator
-New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
-```
-
-### **Windows Defender Exclusions**
-Add project folder to Windows Defender exclusions for better performance:
-
-```powershell
-# Run as Administrator
-Add-MpPreference -ExclusionPath "C:\path\to\your\project"
-Add-MpPreference -ExclusionPath "$env:APPDATA\npm"
-```
-
-### **Common Windows Issues and Solutions**
-
-#### **Issue: "npm command not found"**
-```powershell
-# Solution 1: Restart terminal after Node.js installation
-# Solution 2: Add npm to PATH manually
-$env:PATH += ";C:\Users\$env:USERNAME\AppData\Roaming\npm"
-
-# Solution 3: Reinstall Node.js with "Add to PATH" option checked
-```
-
-#### **Issue: "Permission denied" errors**
-```powershell
-# Solution 1: Run terminal as Administrator
-# Solution 2: Configure npm to use different directory
-npm config set prefix "$env:APPDATA\npm"
-
-# Solution 3: Use npx instead of global installs
-npx playwright install
-```
-
-#### **Issue: "ENOENT" or "EPERM" errors**
-```cmd
-REM Solution 1: Clear npm cache
-npm cache clean --force
-
-REM Solution 2: Delete node_modules and reinstall
-rmdir /s /q node_modules
-del package-lock.json
-npm install
-```
-
-#### **Issue: Playwright browsers not installing**
-```powershell
-# Solution 1: Install with elevated permissions
-Start-Process powershell -Verb RunAs -ArgumentList "cd '$PWD'; npx playwright install"
-
-# Solution 2: Manual browser installation
-npx playwright install chromium
-npx playwright install firefox
-npx playwright install webkit
-
-# Solution 3: Install system dependencies
-npx playwright install-deps
-```
-
-### **Performance Optimization for Windows**
-
-```powershell
-# Use faster package manager (if available)
-npm install -g pnpm
-pnpm install  # Instead of npm install
-
-# Enable parallel processing
-$env:NODE_OPTIONS="--max-old-space-size=4096"
-
-# Use Windows Subsystem for Linux (WSL) for better performance
-wsl --install
-# Then run tests in WSL environment
-```
-
-### **IDE Configuration for Windows**
-
-#### **Visual Studio Code**
-```json
-// .vscode/settings.json
-{
-  "terminal.integrated.defaultProfile.windows": "PowerShell",
-  "terminal.integrated.profiles.windows": {
-    "PowerShell": {
-      "source": "PowerShell",
-      "args": ["-NoProfile"]
-    }
-  },
-  "files.eol": "\n",
-  "git.autocrlf": false
-}
-```
-
-#### **Environment Variables in VS Code**
-```json
-// .vscode/launch.json
-{
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Debug Tests",
-      "type": "node",
-      "request": "launch",
-      "program": "${workspaceFolder}/node_modules/.bin/cucumber-js",
-      "args": ["--profile", "headed", "--tags", "@debug"],
-      "env": {
-        "HEADED": "true",
-        "DEBUG": "true"
-      },
-      "console": "integratedTerminal"
-    }
-  ]
-}
-```
-
-### Support Contacts
-- **Technical Issues**: Create GitHub issue
-- **Framework Questions**: Check documentation
-- **Feature Requests**: Submit pull request
-- **Emergency Support**: Contact DevOps team
+- [Playwright Team](https://github.com/microsoft/playwright) for the excellent testing framework
+- [Cucumber Team](https://github.com/cucumber/cucumber-js) for BDD support
+- [TypeScript Team](https://github.com/microsoft/TypeScript) for type safety
+- Open source community for various tools and libraries
 
 ---
 
 **Happy Testing! 🎉**
 
-*Built with ❤️ by the Test Automation Team*
-
-
-
-
-
+For more information, please refer to the individual component documentation in their respective directories.
 
