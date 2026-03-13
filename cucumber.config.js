@@ -1,6 +1,5 @@
 
-import { IConfiguration } from '@cucumber/cucumber';
-import { config } from 'dotenv';
+const { config } = require('dotenv');
 
 // Load environment variables
 config();
@@ -9,18 +8,22 @@ config();
  * Cucumber Configuration
  * See https://cucumber.io/docs/cucumber/api/#options
  */
-const cucumberConfig: IConfiguration = {
+const cucumberConfig = {
   // Feature files location
   paths: [
-    'tests/ui-e2e/**/features/**/*.feature',
-    'tests/api/features/**/*.feature'
+    'tests/ui-e2e/app1/features/*.feature',
+    'tests/ui-e2e/app2/features/*.feature',
+    'tests/ui-e2e/frbsf/features/*.feature',
+    'tests/api/features/*.feature'
   ],
 
   // Step definitions location
-  import: [
-    'tests/ui-e2e/**/step-definitions/**/*.ts',
-    'tests/api/step-definitions/**/*.ts',
-    'core/hooks/**/*.ts'
+  require: [
+    'tests/ui-e2e/app1/step-definitions/*.ts',
+    'tests/ui-e2e/app2/step-definitions/*.ts',
+    'tests/ui-e2e/frbsf/step-definitions/*.ts',
+    'tests/api/step-definitions/*.ts',
+    'core/hooks/*.ts'
   ],
 
   // Require modules
@@ -121,10 +124,10 @@ const cucumberConfig: IConfiguration = {
     },
     
     api: {
-      paths: ['tests/api/features/**/*.feature'],
-      import: [
-        'tests/api/step-definitions/**/*.ts',
-        'core/hooks/**/*.ts'
+      paths: ['tests/api/features/*.feature'],
+      require: [
+        'tests/api/step-definitions/*.ts',
+        'core/hooks/*.ts'
       ],
       tags: '@api',
       parallel: 5,
@@ -132,10 +135,10 @@ const cucumberConfig: IConfiguration = {
     },
     
     ui: {
-      paths: ['tests/ui-e2e/**/features/**/*.feature'],
-      import: [
-        'tests/ui-e2e/**/step-definitions/**/*.ts',
-        'core/hooks/**/*.ts'
+      paths: ['tests/ui-e2e/*/features/*.feature'],
+      require: [
+        'tests/ui-e2e/*/step-definitions/*.ts',
+        'core/hooks/*.ts'
       ],
       tags: '@ui',
       parallel: 3,
@@ -195,7 +198,7 @@ const cucumberConfig: IConfiguration = {
 /**
  * Get base URL based on environment
  */
-function getBaseUrl(): string {
+function getBaseUrl() {
   const env = process.env.ENV || 't3';
   
   switch (env.toLowerCase()) {
@@ -233,5 +236,5 @@ function getViewport() {
   }
 }
 
-export default cucumberConfig;
+module.exports = cucumberConfig;
 

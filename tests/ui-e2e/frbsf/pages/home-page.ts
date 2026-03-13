@@ -20,7 +20,7 @@
  */
 
 import { Page } from '@playwright/test';
-import { BasePage } from '../../../pages/base-page';
+import { BasePage } from '../../../../core/base/basePage';
 
 /**
  * HomePage class for Federal Reserve Bank of San Francisco website.

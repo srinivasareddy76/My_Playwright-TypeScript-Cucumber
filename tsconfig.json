@@ -33,8 +33,9 @@
       "@/*": ["./"],
       "@core/*": ["core/*"],
       "@config/*": ["config/*"],
-      "@applications/*": ["applications/*"],
-      "@api/*": ["api/*"],
+      "@tests/*": ["tests/*"],
+      "@ui-e2e/*": ["tests/ui-e2e/*"],
+      "@api/*": ["tests/api/*"],
       "@credentials/*": ["credentials/*"],
       "@certs/*": ["certs/*"],
       "@scripts/*": ["scripts/*"],
@@ -43,13 +44,12 @@
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
   "include": [
-    "applications/**/*",
-    "api/**/*",
+    "tests/**/*",
     "core/**/*",
     "config/**/*",
     "scripts/**/*",
     "playwright.config.ts",
-    "cucumber.config.ts"
+    "cucumber.config.js"
   ],
   "exclude": [
     "node_modules",

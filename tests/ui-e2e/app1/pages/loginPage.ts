@@ -5,8 +5,8 @@
 
 
 import { Page, Locator } from '@playwright/test';
-import { BasePage } from '../../../core/base/basePage';
-import { Logger } from '../../../core/utilities/logger';
+import { BasePage } from '../../../../core/base/basePage';
+import { Logger } from '../../../../core/utilities/logger';
 
 export class LoginPage extends BasePage {
   // Page elements

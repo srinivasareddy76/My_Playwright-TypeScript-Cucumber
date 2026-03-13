@@ -4,7 +4,7 @@
 
 
 import { Page } from '@playwright/test';
-import { BasePage } from '../../../pages/base-page';
+import { BasePage } from '../../../../core/base/basePage';
 
 export class SearchResultsPage extends BasePage {
   // Page selectors

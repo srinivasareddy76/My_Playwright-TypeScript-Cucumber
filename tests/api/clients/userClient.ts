@@ -8,8 +8,8 @@
 
 
 
-import { BaseAPI, ApiResponse } from '../../core/base/baseAPI';
-import { Logger } from '../../core/utilities/logger';
+import { BaseAPI, ApiResponse } from '../../../core/base/baseAPI';
+import { Logger } from '../../../core/utilities/logger';
 
 export class UserApiClient extends BaseAPI {
   constructor(logger?: Logger) {
